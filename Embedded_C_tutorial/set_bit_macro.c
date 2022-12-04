@@ -20,7 +20,7 @@ int main()
 
     if(BIT(bit) != 0)
     {
-        printf("nth bit no. set\n");
+        printf("%dth bit no. set\n",bit);
     }
 
     else
