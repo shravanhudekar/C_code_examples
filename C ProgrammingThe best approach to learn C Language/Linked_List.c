@@ -1,5 +1,5 @@
 #include <stdio.h>
-
+#include <stdlib.h>
 typedef struct 
 {
     int item;
@@ -24,7 +24,7 @@ int print(node *n)
     while(n != NULL)
     {
         printf("&d",n->item);
-        n=n->next;
+        n = n->next;
     }
 
 }
