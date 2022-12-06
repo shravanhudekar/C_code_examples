@@ -39,16 +39,16 @@ char* readline();
  */
 char* timeConversion(char* s) {
 
-    char hh,mm,ss,temp[5]={0},tstr[sizeof(s)]={0},*str;
+    char hh,mm,ss,temp[5]={0},tstr[sizeof(s)]={0},str[5]={0};
     int time[5];
     int i=0,j=0,k=0;
 
     int s_size= sizeof(s);
-  //  printf("%d",s_size);
+    
     while(i < (s_size))
-    {
+    {   //printf("%c",s[i]);
        
-        if(s[i] != ':' && i < (s_size-2))
+        if(s[i] != ':' && i < (s_size))
         {
             temp[j++]=s[i];          //spliting hh:mm:ssAM   07:05:49AM
             //printf("%d",s_size);
@@ -60,23 +60,26 @@ char* timeConversion(char* s) {
            time[k]=atoi(temp);
            // time[k++]=temp;
 
-           if(s[s_size-2]=='A' && time[0]==0 )
+           if(s[s_size]=='A' && time[0]==0 )
            {   
                 printf("00:");
+                strcat(tstr,"00:");
            }
 
-           else if(s[s_size-2] == 'P')
+           else if(s[s_size] == 'P')
            {
-                 printf("%d:",time[k]+12);
-
+                printf("%d:",(time[k]+12));
+                //sprintf(str, "%s",(time[k]+12));
+                strcat(tstr,str);
+      
            }
 
            else if( s[i] != ':')
            {
-                //printf("%s:",temp);
+                printf("%s:",temp);
            }
 
-           printf("%c",s[i]);
+          // printf("%c",s[i]);
             j=0;
             k++;
         }
