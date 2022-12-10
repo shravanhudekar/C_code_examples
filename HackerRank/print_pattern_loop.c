@@ -27,7 +27,7 @@ int main()
                 printf("%d ",n);
                 if(k<l) { n++; k++;}
             }          
-        
+        }
         printf("\n");  
     }
 
