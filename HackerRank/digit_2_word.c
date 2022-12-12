@@ -57,7 +57,9 @@ int main()
           if(i<10)
           {
               //digit_word(i);
-              printf("%s\n",s[i-1]);                                
+                  scanf("%s",&s[i-1]);    
+              printf("%s\n",s[i-1]);
+                                      
           }
           
           else 
