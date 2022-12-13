@@ -9,7 +9,7 @@ void SMV(char *s,int len)
     int flag=0;
     memset(temp,0,sizeof(temp));
 
-    for(int i=0;i<len-6;i++)
+    for(int i=0;i<len;i++)
     {
         int j=i+4;
 
@@ -32,9 +32,10 @@ void SMV(char *s,int len)
                 temp[i]=s[j];
             }
         }
-        
+        printf("%s\n",temp);
     }
-    memcpy(s,temp,sizeof(temp));
+   
+    memcpy(s,temp,strlen(temp));
 
 }
 void SC(char *s,int len)
@@ -42,7 +43,7 @@ void SC(char *s,int len)
 {
     char temp[len];
     int flag=0;
-    
+    memset(temp,0,sizeof(temp));
     for(int i=0;i<len-4;i++)
     {
         int j=i+4;
@@ -146,19 +147,19 @@ void CC(char *s,int len)
 
 int main() 
 {
-    char *s[10][1024]={"\0"},str[40];
+    char *s[10][100]={0},str[40]={0};
     int i,len=0;
 
-    for(i=0;i<6;i++)
+    for(i=0;i<1;i++)
      {
         scanf("\n");
-        scanf("%[^\n]",str);
-        if(str == "\000" ){
-            break;
-        }
+        scanf("%[^\n]%*c",str);
+        // if(strcmp(str,"")){
+        //     break;
+        // }
         if (str[0]== 'S' && str[2]=='M')
         {
-            SMV(str,strlen(str));
+            SMV(str,strlen(str)-4);
         }
 
         else if (str[0]== 'S' && str[2]=='C')
@@ -186,10 +187,11 @@ int main()
             CC(str,strlen(str));
         }
          memcpy(s[i],str,strlen(str)); 
-         len++;  
+         
+          
      }
 
-        for(i=0;i<len;i++)
+        for(i=0;i<1;i++)
         {
           printf("%s\n",s[i]);
 
