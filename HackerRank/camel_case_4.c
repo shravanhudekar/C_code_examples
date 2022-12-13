@@ -3,27 +3,28 @@
 #include <math.h>
 #include <stdlib.h>
 
-void SM(char *s,int len)
+void SMV(char *s,int len)
 {
     char temp[len];
     int flag=0;
-    
+    memset(temp,0,sizeof(temp));
+
     for(int i=0;i<len-6;i++)
     {
         int j=i+4;
 
         if(s[j]<='Z')
         {
-            temp[i]=' ';
-            temp[i+1]=s[j]+32;
-            flag=1;
+           temp[i+flag]=' ';
+            temp[i+1+flag]=s[j]+32;
+            flag++;
         }
 
         else 
         {
-            if(flag==1)
+             if(flag>0)
             {
-                temp[i+1]=s[j];
+                temp[i+flag]=s[j];
             }
         
             else
@@ -31,12 +32,13 @@ void SM(char *s,int len)
                 temp[i]=s[j];
             }
         }
-        printf("%s\n",temp);
+        
     }
     memcpy(s,temp,sizeof(temp));
 
 }
 void SC(char *s,int len)
+
 {
     char temp[len];
     int flag=0;
@@ -51,16 +53,16 @@ void SC(char *s,int len)
 
         else if(j>4 && s[j]<='Z')
         {
-            temp[i]=' ';
-            temp[i+1]=s[j]+32;
-            flag=1;
+            temp[i+flag]=' ';
+            temp[i+1+flag]=s[j]+32;
+            flag++;
         }
 
         else 
         {
-            if(flag==1)
+            if(flag>0)
             {
-                temp[i+1]=s[j];
+                temp[i+flag]=s[j];
             }
         
             else
@@ -68,23 +70,95 @@ void SC(char *s,int len)
                 temp[i]=s[j];
             }
         }
-       
+    }
+    memcpy(s,temp,sizeof(temp));
+}
+void CMV(char *s,int len,char c)
+{
+    char temp[len+2],br[]="()";
+    int flag=0;
+    
+    for(int i=0;i<len;i++)
+    {
+        int j=i+4;
+        if(s[j+flag]==' ')
+        {
+            temp[i]=s[j+1+flag]-32;
+            flag++;
+        }
+
+        else 
+        {
+            if(flag>0)
+            {
+                temp[i]=s[j+flag];
+            }
+        
+            else
+            {
+                temp[i]=s[j];
+            }
+        }
+    }
+    if(c=='M')
+    {
+        strcat(temp,br);
+    }
+   
+    memcpy(s,temp,sizeof(temp));
+
+}
+void CC(char *s,int len)
+{
+    char temp[len],br[]="()";
+    int flag=0;
+    
+    for(int i=0;i<len;i++)
+    {
+        int j=i+4;
+        if(j==4 && s[j]>='a')
+        {
+             temp[i]=s[j]-32;
+        }
+
+        else if(j>4 && s[j+flag]==' ')
+        {
+            temp[i]=s[j+1+flag]-32;
+            flag++;
+        }
+
+        else 
+        {
+            if(flag>0)
+            {
+                temp[i]=s[j+flag];
+            }
+        
+            else
+            {
+                temp[i]=s[j];
+            }
+        }
     }
     memcpy(s,temp,sizeof(temp));
 
 }
+
 int main() 
 {
-    char *s[10][1024]={0},str[40];
-    int i;
+    char *s[10][1024]={"\0"},str[40];
+    int i,len=0;
 
-    // for(i=0;i<2;i++)
-    // {
-       // scanf("\n");
+    for(i=0;i<6;i++)
+     {
+        scanf("\n");
         scanf("%[^\n]",str);
+        if(str == "\000" ){
+            break;
+        }
         if (str[0]== 'S' && str[2]=='M')
         {
-            SC(str,strlen(str));
+            SMV(str,strlen(str));
         }
 
         else if (str[0]== 'S' && str[2]=='C')
@@ -92,16 +166,35 @@ int main()
             SC(str,strlen(str));
         }
 
-        printf("%s",str);
-        // memcpy(s[i],str,strlen(str));
-        
-    // }
+        else if (str[0]== 'S' && str[2]=='V')
+        {
+            SMV(str,strlen(str)+2);
+        }
 
-//    for(i=0;i<(strlen(s[0]));i++)
-//     {
-//         printf("%c\n",s[0][i]);
+        else if (str[0]== 'C' && str[2]=='M')
+        {
+            CMV(str,strlen(str),str[2]);
+        }
 
-//     }
+        else if (str[0]== 'C' && str[2]=='V')
+        {
+            CMV(str,strlen(str),str[2]);
+        }
+
+        else if (str[0]== 'C' && str[2]=='C')
+        {
+            CC(str,strlen(str));
+        }
+         memcpy(s[i],str,strlen(str)); 
+         len++;  
+     }
+
+        for(i=0;i<len;i++)
+        {
+          printf("%s\n",s[i]);
+
+        }
+
     return 0;
 }
 
