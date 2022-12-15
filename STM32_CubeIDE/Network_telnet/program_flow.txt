@@ -1,0 +1,10 @@
+1. take username and password
+2. compare it with array of usarname and password.
+3. if both matches promapt user to config mode.
+    3.1 else printf msg as wrong username/password.
+4.in config mode take user commands.
+    4.1 LED_ON to turn on LED.
+    4.2 LED_OFF to turn of LED.
+    4.3 print success msg on valid command.
+    4.4 print invalid syntax msg on invalid command.
+5. exit or Z command to exit
