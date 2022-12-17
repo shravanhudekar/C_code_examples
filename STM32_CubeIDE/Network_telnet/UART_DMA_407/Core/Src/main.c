@@ -19,13 +19,13 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+
+/* Private includes ----------------------------------------------------------*/
+/* USER CODE BEGIN Includes */
 #include<stdio.h>
 #include<stdint.h>
 #include<stdlib.h>
 #include<string.h>
-/* Private includes ----------------------------------------------------------*/
-/* USER CODE BEGIN Includes */
-
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -45,6 +45,8 @@
 #endif
 //#define TEST_IT
 #define TELNET
+#define SPRINTF
+//#define TRANSMIT_DMA
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -93,11 +95,11 @@ uint8_t i=0;
 #endif
 
 #ifdef TELNET
-uint8_t *user[]={"admin", "adam1","user1","test1"};
-uint8_t *pass[]={"12345","54321","USER1","TEST1"};
-uint8_t input[20],erase[4];
-uint8_t input_user[10];
-uint8_t input_pass[10];
+char *user[] = {"admin", "adam1","user1","test1"};
+char *pass[] = {"12345","54321","USER1","TEST1"};
+char input[20],erase[4];
+char input_user[10];
+char input_pass[10];
 uint8_t stage=INIT,flag=FALSE;
 uint8_t rx_data,j=0,recieved=FALSE,count=0;
 #endif
@@ -139,15 +141,17 @@ int main(void)
 #ifdef TEST_IT
   HAL_UART_Transmit(&huart2, tx_buff, sizeof(tx_buff), 50);
   HAL_UART_Receive_DMA(&huart2, rx_buff, 20);
-  /* USER CODE END 2 */
 #endif
 
 #ifdef TELNET
+ // printf("Username: ");
   printf("*********************************************\r\n"
 		 "*     Telnet connection started....         *\r\n "
 		 "*********************************************\r\n");
   telnet_init();
 #endif
+  /* USER CODE END 2 */
+
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
@@ -159,6 +163,159 @@ int main(void)
 	  {
 		  telnet_init();
 	  }
+
+	  if(recieved)
+	  	{
+	  		switch(stage)
+	  			{
+	  				case START:
+	  //					if(strcmp(input,"telnet"))
+	  //					{
+	  //						telnet_init();
+	  //					}
+
+	  					if(strlen(input)>8)
+	  					{
+	  						printf("input out of range!!\r\n");
+	  					}
+	  					else
+	  					{
+	  						memcpy(input_user,input,strlen(input));
+	  						memset(input,0,sizeof(input));
+
+	  #ifdef SPRINTF
+	  						sprintf(input,"\n\rPassword: ");
+	  						//HAL_UART_Transmit(&huart2, input, sizeof(input), 50);
+	  						HAL_UART_Transmit_DMA(&huart2, (uint8_t *)input, sizeof(input));
+	  						//memset(input,0,sizeof(input));
+	  #else
+	  						printf("\n\rPassword: ");
+	  #endif
+	  						stage=AUTH;
+	  						HAL_UART_Receive_DMA(&huart2,&rx_data, 1);
+	  						rx_data=0;
+	  						j=0;
+	  						recieved=FALSE;
+	  					}
+	  					break;
+
+	  				case AUTH:
+	  					if(strlen(input)>8)
+	  					{
+	  						printf("input out of range!!\r\n");
+	  					}
+
+	  					else
+	  					{
+	  						memcpy(input_pass,input,strlen(input));
+	  						memset(input,0,sizeof(input));
+
+	  						for(uint8_t i=0;i<4;i++)
+	  						{
+	  							if((strcmp(*(user+i),input_user)==0) && (strcmp(pass[i],input_pass)==0))
+	  							{
+	  								printf("\r\nSuccessfully Authenticated!\r\n");
+
+	  #ifdef SPRINTF
+	  								sprintf(input,"\r\nConfig> ");
+	  								//HAL_UART_Transmit(&huart2, input, sizeof(input), 50);
+	  								HAL_UART_Transmit_DMA(&huart2,(uint8_t *) input, strlen(input));
+	  								//memset(input,0,sizeof(input));
+	  #else
+	  								printf("Config> ");
+	  #endif
+	  								HAL_UART_Receive_DMA(&huart2,&rx_data, 1);
+	  										rx_data=0;
+	  										j=0;
+	  										recieved=FALSE;
+	  								flag=TRUE;
+	  								stage=CONFIG;
+	  								break;
+	  							}
+	  						}
+
+	  						if(!flag)
+	  						{
+	  							stage=INIT;
+	  							flag=FALSE;
+	  							count++;
+	  							j=0;
+
+	  							if(count>3)
+	  							{
+	  								printf("\r\nlogin attempt excedded!!\r\n");
+	  								stage=EXIT;
+	  							}
+	  						}
+	  					}
+	  						//memset(input,0,sizeof(input));
+	  						break;
+
+
+	  				case CONFIG:
+	  					if(strcmp(input,"exit")==0 ||  strcmp(input,"Z")==0 )
+	  					{
+	  						printf("\r\nsession ended!!\r\n");
+	  						HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13, GPIO_PIN_RESET);
+	  						stage=EXIT;
+	  					}
+	  					else
+	  					{
+
+	  						if(strcmp(input,"turn ON LED")==0)
+	  						{
+	  							HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13, GPIO_PIN_SET);
+	  							printf("\r\nLED turned ON...\r\n");
+	  						}
+
+	  						else if(strcmp(input,"turn OFF LED")==0)
+	  						{
+	  							HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13, GPIO_PIN_RESET);
+	  							printf("\r\nLED turned OFF...\r\n");
+	  						}
+
+	  						else
+	  						{
+	  							printf("\r\ninput is invalid\r\n");
+	  						}
+
+
+	  						memset(input,0,sizeof(input));
+	  #ifdef SPRINTF
+	  						sprintf(input,"Config> ");
+	  						//HAL_UART_Transmit(&huart2, input, sizeof(input), 50);
+	  						HAL_UART_Transmit_DMA(&huart2, (uint8_t *)input, strlen(input));
+	  						//memset(input,0,sizeof(input));
+	  #else
+	  						printf("Config> ");
+	  #endif
+	  						HAL_UART_Receive_DMA(&huart2,&rx_data, 1);
+	  										recieved=FALSE;
+	  										rx_data=0;
+	  										j=0;
+	  					}
+	  					//memset(input,0,sizeof(input));
+	  					break;
+
+	  				case EXIT:
+	  					HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13, GPIO_PIN_RESET);
+	  					HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_14);
+
+	  					memset(input,0,sizeof(input));
+	  					HAL_UART_Receive_DMA(&huart2,&rx_data, 1);
+	  									recieved=FALSE;
+	  									rx_data=0;
+	  									j=0;
+
+	  					break;
+	  			}
+	  	}
+
+//	  	else
+//	  	{
+//	  		HAL_UART_Receive_DMA(&huart2,&rx_data, 1);
+//	  		recieved=FALSE;
+//	  	}
 #endif
     /* USER CODE END WHILE */
 
@@ -283,19 +440,19 @@ static void MX_USART2_UART_Init(void)
 }
 
 /**
-  * Enable IT controller clock
+  * Enable DMA controller clock
   */
 static void MX_DMA_Init(void)
 {
 
-  /* IT controller clock enable */
+  /* DMA controller clock enable */
   __HAL_RCC_DMA1_CLK_ENABLE();
 
-  /* IT interrupt init */
-  /* IT1_Stream5_IRQn interrupt configuration */
+  /* DMA interrupt init */
+  /* DMA1_Stream5_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA1_Stream5_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(DMA1_Stream5_IRQn);
-  /* IT1_Stream6_IRQn interrupt configuration */
+  /* DMA1_Stream6_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA1_Stream6_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(DMA1_Stream6_IRQn);
 
@@ -336,7 +493,7 @@ static void MX_GPIO_Init(void)
 /* USER CODE BEGIN 4 */
 
 PUTCHAR_PROTOTYPE
-{  HAL_UART_Transmit(&huart2, (uint8_t *)&ch, 1, HAL_MAX_DELAY); return ch; }
+{  HAL_UART_Transmit(&huart2, (uint8_t *)&ch, 1, HAL_MAX_DELAY);   return ch; }
 
 GETCHAR_PROTOTYPE
 { 	uint8_t ch = 0;
@@ -344,6 +501,12 @@ GETCHAR_PROTOTYPE
 	__HAL_UART_CLEAR_OREFLAG(&huart2);
 	HAL_UART_Receive(&huart2, (uint8_t *)&ch, 1, HAL_MAX_DELAY);
 	return ch;
+}
+
+void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
+{
+	HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_1);
+	memset(input,0,sizeof(input));
 }
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
@@ -367,15 +530,15 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 
 #ifdef TELNET
 
-	if(rx_data == '\b' && j>0)
-		{
-			input[j]=0;
-			j=j-2;
-			sprintf(erase," \b");
-			HAL_UART_Transmit(&huart2, erase, sizeof(erase), 50);
-			memset(erase,0,sizeof(erase));
-			rx_data=0;
-		}
+//	if(rx_data == '\b' && j>0)
+//		{
+//			//input[j]=0;
+//			j=j-1;
+//			sprintf(erase," \b");
+//			HAL_UART_Transmit(&huart2, erase, sizeof(erase), 50);
+//			memset(erase,0,sizeof(erase));
+//			rx_data=0;
+//		}
 
 	if((rx_data != '\r') || j>(sizeof(input)) )
 		{
@@ -391,144 +554,6 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 		recieved=TRUE;
 		//printf("\r\n");
 	}
-	if(recieved)
-	{
-		switch(stage)
-			{
-				case START:
-//					if(strcmp(input,"telnet"))
-//					{
-//						telnet_init();
-//					}
-
-					if(strlen(input)>8)
-					{
-						printf("input out of range!!\r\n");
-					}
-					else
-					{
-						memcpy(input_user,input,strlen(input));
-						memset(input,0,sizeof(input));
-						//printf("\n\rPassword: ");
-						sprintf(input,"\n\rPassword: ");
-						HAL_UART_Transmit(&huart2, input, sizeof(input), 50);
-						memset(input,0,sizeof(input));
-						stage=AUTH;
-						HAL_UART_Receive_DMA(&huart2,&rx_data, 1);
-						rx_data=0;
-						j=0;
-						recieved=FALSE;
-					}
-					break;
-
-				case AUTH:
-					if(strlen(input)>8)
-					{
-						printf("input out of range!!\r\n");
-					}
-
-					else
-					{
-						memcpy(input_pass,input,strlen(input));
-						memset(input,0,sizeof(input));
-
-						for(uint8_t i=0;i<4;i++)
-						{
-							if((strcmp(*(user+i),input_user)==0) && (strcmp(*(pass+i),input_pass)==0))
-							{
-								printf("\r\nSuccessfully Authenticated!\r\n");
-								//printf("Config> ");
-								sprintf(input,"\r\nConfig> ");
-								HAL_UART_Transmit(&huart2, input, sizeof(input), 50);
-								memset(input,0,sizeof(input));
-								HAL_UART_Receive_DMA(&huart2,&rx_data, 1);
-										rx_data=0;
-										j=0;
-										recieved=FALSE;
-								flag=TRUE;
-								stage=CONFIG;
-								break;
-							}
-						}
-
-						if(!flag)
-						{
-							stage=INIT;
-							flag=FALSE;
-							count++;
-							j=0;
-
-							if(count>3)
-							{
-								printf("\r\nlogin attempt excedded!!\r\n");
-								stage=EXIT;
-							}
-						}
-					}
-						memset(input,0,sizeof(input));
-						break;
-
-
-				case CONFIG:
-					if(strcmp(input,"exit")==0 ||  strcmp(input,"Z")==0 )
-					{
-						printf("\r\nsession ended!!\r\n");
-						HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13, GPIO_PIN_RESET);
-						stage=EXIT;
-					}
-					else
-					{
-
-						if(strcmp(input,"turn ON LED")==0)
-						{
-							HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13, GPIO_PIN_SET);
-							printf("\r\nLED turned ON...\r\n");
-						}
-
-						else if(strcmp(input,"turn OFF LED")==0)
-						{
-							HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13, GPIO_PIN_RESET);
-							printf("\r\nLED turned OFF...\r\n");
-						}
-
-						else
-						{
-							printf("\r\ninput is invalid\r\n");
-						}
-
-						//printf("Config> ");
-						memset(input,0,sizeof(input));
-						sprintf(input,"\r\nConfig> ");
-						HAL_UART_Transmit(&huart2, input, sizeof(input), 50);
-						memset(input,0,sizeof(input));
-						HAL_UART_Receive_DMA(&huart2,&rx_data, 1);
-										recieved=FALSE;
-										rx_data=0;
-										j=0;
-					}
-					memset(input,0,sizeof(input));
-					break;
-
-				case EXIT:
-					HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13, GPIO_PIN_RESET);
-					HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_15);
-
-					memset(input,0,sizeof(input));
-					HAL_UART_Receive_DMA(&huart2,&rx_data, 1);
-									recieved=FALSE;
-									rx_data=0;
-									j=0;
-
-					break;
-			}
-	}
-
-	else
-	{
-		HAL_UART_Receive_DMA(&huart2,&rx_data, 1);
-		recieved=FALSE;
-	}
-
 
 #endif
 
@@ -545,14 +570,22 @@ void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
 #ifdef TELNET
 static void telnet_init(void)
   {
+
+#ifdef SPRINTF
 	  sprintf(input,"\r\nUsername: ");
-	  HAL_UART_Transmit(&huart2, input, sizeof(input), 50);
+	  //HAL_UART_Transmit(&huart2, input, sizeof(input), 50);
+	  HAL_UART_Transmit_DMA(&huart2, (uint8_t *)input, sizeof(input));
+#else
+	  printf("Username :");
+
+#endif
+
 	  stage=START;
 	  flag=FALSE;
 	  rx_data=0;
 	  recieved=FALSE;
 
-	  memset(input,0,sizeof(input));
+	  //memset(input,0,sizeof(input));
 	  memset(input_user,0,sizeof(input_user));
 	  memset(input_pass,0,sizeof(input_pass));
 	  HAL_UART_Receive_DMA(&huart2,&rx_data, 1);

@@ -1,3 +1,39 @@
+/*
+Aim: flip matrix such a way that you get sum of 1st quadrant as MAX for n*n matrix.
+
+|INPUT|
+
+STDIN           Function
+-----           --------
+1               q = 1
+2               n = 2
+112 42 83 119   matrix = [[112, 42, 83, 119], [56, 125, 56, 49], \
+56 125 56 49              [15, 78, 101, 43], [62, 98, 114, 108]]
+15 78 101 43
+62 98 114 108
+
+|Expected output:| 414
+
+|PROGRAM FLOW:|
+1. run nested loop to access each element of array.
+2. find MAX between its corresponding elements.
+for e.g.
+ __            __
+|                |
+| A1  B1  B2  A2 |
+| C1  D1  D2  C2 |
+| C3  D3  D4  C4 |
+| A3  B3  B4  A4 |
+|__            __|
+
+* A can be only be replaced by corresponding A, similar for B, C, D.
+
+3. find sum of MAX(A,B,C,D).
+4. return sum
+*/
+
+
+
 #include <assert.h>
 #include <ctype.h>
 #include <limits.h>
@@ -24,66 +60,23 @@ int parse_int(char*);
  * The function is expected to return an INTEGER.
  * The function accepts 2D_INTEGER_ARRAY matrix as parameter.
  */
-int max(int *a, int n)
+int max(int a, int b)
 {
-    int temp=0;
-
-    for(int i=0;i<n-1;i++)
-    {
-       if (a[0]>a[i+1])
-        {
-            temp++;
-        }
-    }
-
-    return temp;
-
+    return a>b ? a:b;
 }
 
-int flippingMatrix(int matrix_rows, int matrix_columns, int** matrix) {
-    
-    int i,j,temp,result=0,q[matrix_rows],k=0,freq=0;
-     result= matrix[0][0]+matrix[0][1]+matrix[1][0]+matrix[1][1];
-    memset(q,0,sizeof(q));
-
-    while ((result != 3 && freq>matrix_columns+1) ==0)
+int flippingMatrix(int matrix_rows, int matrix_columns, int** matrix) 
+{  
+    int i,j,sum=0,n;
+    n=matrix_rows;
+    for(i=0;i<n/2;i++)
     {
-
-        for(i=0;i<matrix_rows;i++)
+        for(j=0;j<n/2;j++)
         {
-         for(j=0;j<matrix_columns/2;j++)
-            {
-                k=j+1;
-                temp=matrix[i][matrix_columns-k];
-                matrix[i][matrix_columns-k]=matrix[i][j];
-                matrix[i][j]=temp;
-            }
-
+            sum+=max(max(matrix[i][j],matrix[i][n-j-1]),max(matrix[n-i-1][j],matrix[n-i-1][n-j-1]));
         }
-    
-    //flipping of rows
-     for(j=0;j<matrix_columns;j++)
-        {
-            for(i=0;i<matrix_rows/2;i++)
-            {
-                k=i+1;
-                    temp=matrix[i][matrix_rows-k];
-                    matrix[i][matrix_rows-k]=matrix[i][j];
-                    matrix[i][j]=temp;
-            }
-        }
-    
-        q[0]= matrix[0][0]+matrix[0][1]+matrix[1][0]+matrix[1][1];
-        q[1]= matrix[0][2]+matrix[0][3]+matrix[1][2]+matrix[1][3];
-        q[2]= matrix[2][0]+matrix[2][1]+matrix[3][0]+matrix[3][1];
-        q[3]= matrix[2][2]+matrix[2][3]+matrix[3][2]+matrix[3][3];
-        
-        result= max(q,matrix_rows);
-        freq++;
     }
-    
-    return q[0];
-
+    return sum;
 }
 
 int main()
