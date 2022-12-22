@@ -1,0 +1,20 @@
+15:00:51 **** Incremental Build of configuration Debug for project Blink_RIOS ****
+make -j12 all 
+arm-none-eabi-gcc "../Core/Src/toggle_LED.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/toggle_LED.d" -MT"Core/Src/toggle_LED.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/toggle_LED.o"
+arm-none-eabi-gcc -o "Blink_RIOS.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\incads1917\STM32CubeIDE\workspace_1.7.0\Blink_RIOS\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Blink_RIOS.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: Blink_RIOS.elf
+ 
+arm-none-eabi-size   Blink_RIOS.elf 
+arm-none-eabi-objdump -h -S  Blink_RIOS.elf  > "Blink_RIOS.list"
+arm-none-eabi-objcopy  -O binary  Blink_RIOS.elf  "Blink_RIOS.bin"
+   text	   data	    bss	    dec	    hex	filename
+   6108	     32	   1576	   7716	   1e24	Blink_RIOS.elf
+Finished building: default.size.stdout
+ 
+Finished building: Blink_RIOS.bin
+ 
+Finished building: Blink_RIOS.list
+ 
+
+15:00:53 Build Finished. 0 errors, 0 warnings. (took 1s.525ms)
+

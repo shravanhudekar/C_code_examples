@@ -1,0 +1,99 @@
+#include <stdio.h>
+#include "calculator.h"
+
+
+//
+//// C Program to Make a Simple Calculator
+//// Using switch case
+//#include <stdio.h>
+//#include <stdlib.h>
+
+//uint16_t calculator()
+//{
+//    char ch;
+//    double a, b;
+//    while (1) {
+//        printf("Enter an operator (+, -, *, /), if want to exit press x: \n\r");
+//        scanf(" %c", &ch);
+//        // to exit
+//        if (ch == 'x')
+//            exit(0);
+//        printf("Enter two first and second operand: \n\r");
+//        scanf("%lf %lf",&a,&b);
+//        // Using switch case we will differentiate
+//        // operations based on different operator
+//        switch (ch) {
+//        // For Addition
+//        case '+':
+//            printf("%.1lf + %.1lf = %.1lf\n\r", a, b, a + b);
+//            break;
+//        // For Subtraction
+//        case '-':
+//            printf("%.1lf - %.1lf = %.1lf\n\r", a, b, a - b);
+//            break;
+//        // For Multiplication
+//        case '*':
+//            printf("%.1lf * %.1lf = %.1lf\n\r", a, b, a * b);
+//            break;
+//        // For Division
+//        case '/':
+//            printf("%.1lf / %.1lf = %.1lf\n\r", a, b, a / b);
+//            break;
+//        // If operator doesn't match any case constant
+//        default:
+//            printf("Error! please write a valid operator\n\r");
+//        }
+//    }
+//}
+
+uint16_t calculator()
+{
+	int ch,x,y;
+	double result;
+	 printf("Enter your choice:\r\n");
+	 printf("1. Addition\n\r","2. Subtraction\n\r","3. Multiplication\n\r","4. Division\n\r");
+
+	switch(ch)
+	{
+		case 1: result=add(x,y);
+				break;
+		case 2: result=sub(x,y);
+				break;
+		case 3: result=mul(x,y);
+				break;
+		case 4: result=division(x,y);
+				break;
+		default: result=999;
+				break;
+	}
+
+	printf("%f\r\n",result);
+
+	return result;
+}
+
+uint16_t add(uint8_t a, uint8_t b)
+{
+	return (a+b);
+}
+uint16_t sub(uint8_t a, uint8_t b)
+{
+	return (a-b);
+}
+uint16_t mul(uint8_t a, uint8_t b)
+{
+	return (a*b);
+}
+uint16_t division(uint8_t a, uint8_t b)
+{
+	if(b==0)
+	{
+		return 9999;
+	}
+
+	else
+	{
+		return (a/b);
+	}
+
+}

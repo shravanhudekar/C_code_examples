@@ -1,0 +1,1028 @@
+
+/** @file CurrentProtection.c
+ *  @brief Provides the function for detection of OC Alarm / Warning with Hysteresys of 5% of Primary current.
+ */
+//! \addtogroup Protection
+//! @{
+#include "CurrentProtection.h"
+#include "AlarmWarningTask.h"
+#include "printfConsole.h"
+
+OpenPhaseDetectionParameters_t Open_Phase_Detection;
+extern ConfigAndRecords_t gConfigAndRecords;
+extern CPU_INT16S           PhSeq_INPS_Magnitude;
+extern CPU_INT16S   	       PhSeq_IPPS_Magnitude;
+extern FCM_TripReset_t      FCM_TripReset;
+extern OS_TCB               TripResetTsk_TCB;
+
+extern ProtStruct_t     FCM_Protection;
+static CPU_INT16U       CPrevMaxWarningType;                                    /**< This holds status of last phasewise OC Warning type */
+static CPU_INT16U       CPrevMaxAlarmType;
+
+CPU_INT08U UpdateOCAlarmOnFlash, UpdateOCWarningOnFlash;
+
+extern FCM_Status_t     FCM_Status;
+extern FCM_fault_Status_t  FCM_Fault_Status;
+extern MeasuredCurrent_t             MeasCurrentI1, MeasCurrentI2, MeasCurrentI3;
+
+extern CPU_INT16U  g_OpenPhase;
+extern  CPU_INT16U g_FaultTypeOV_UV_OC;
+
+static OC_Alert_Timer   I1_OC_ALARM_TIMER,I2_OC_ALARM_TIMER,I3_OC_ALARM_TIMER;  /**< This is a counter variable to count alert time for detecting OC Alarm */
+static OC_Alert_Timer   I1_OC_WARNING_TIMER,I2_OC_WARNING_TIMER,I3_OC_WARNING_TIMER; /**< This is a counter variable to count alert time for detecting OC Warning */
+static CPU_INT08U       I1_OC_ALARM_STATUS,I2_OC_ALARM_STATUS,I3_OC_ALARM_STATUS; /**< This is a Flag for OC Alarm status for I1,I2 and I3. This flag is used to do nothing in Hysteresys while OC alarm is there.  */
+static CPU_INT08U       I1_OC_WARNING_STATUS,I2_OC_WARNING_STATUS,I3_OC_WARNING_STATUS; /**< This is a Flag for OC Warning status for I1,I2 and I3. This flag is used to do nothing in Hysteresys while OC warning is there. */
+static CPU_INT08U       Record_I1_Warning_Time,Record_I2_Warning_Time,Record_I3_Warning_Time; /**< This is a Flag to record the time at which OC warning occured for I1 ,I2 and I3. */
+static CPU_INT08U       Record_I1_Alarm_Time,Record_I2_Alarm_Time,Record_I3_Alarm_Time; /**< This is a Flag to record the time at which OC Alarm occured for I1 ,I2 and I3. */
+
+extern CPU_INT08U  WR_AlarmWarn_Arr[256];
+
+void OCWarningProtection_Init(void);
+void OCAlarmProtection_Init(void);
+
+/**
+ * CurrentProtection
+ * The alarm and warnings for Over Current are generated here.
+ */
+
+//****************************************************************************
+/*!
+	@fn				void CurrentProtection_Init(void)
+
+	@brief			This function initializes the the variable for OC alert type , conter value and states to
+                                default initial values for OC Alarm and Warning. Also initializes alert detection time for OC Alarm / Warning to the 
+                                time parameter.
+
+	@param[in]		-
+
+	@return			-
+*/
+//*****************************************************************************
+void CurrentProtection_Init(void)
+{
+   OCAlarmProtection_Init();
+   OCWarningProtection_Init();
+   OpenPhaseDetectionInit();
+
+   CPrevMaxWarningType = 0;
+   CPrevMaxAlarmType = 0;
+   UpdateOCAlarmOnFlash = 0;
+   UpdateOCWarningOnFlash = 0;
+
+   FCM_Protection.OC_LtAlarm = gConfigAndRecords.FCM_Parameters
+                                  .PROT_IMAX_Alarm_Time * MILLISEC_IN_1_MIN;
+   FCM_Protection.OC_LtWarning = gConfigAndRecords.FCM_Parameters
+                                    .PROT_IMAX_Warning_Time * MILLISEC_IN_1_MIN;
+}
+
+//****************************************************************************
+/*!
+	@fn				void OCAlarmProtection_Init(void)
+
+	@brief			This function initializes the the variable for OC alert type , conter value and states to
+                                default initial values for OC Alarm . 
+
+	@param[in]		-
+
+	@return			-
+*/
+//*****************************************************************************
+void OCAlarmProtection_Init(void)
+{
+   I1_OC_ALARM_TIMER.State = OCTimerDisabled;
+   I2_OC_ALARM_TIMER.State = OCTimerDisabled;
+   I3_OC_ALARM_TIMER.State = OCTimerDisabled;
+   FCM_Protection.OC_AlarmCounter1 = 0;
+   FCM_Protection.OC_AlarmCounter2 = 0;
+   FCM_Protection.OC_AlarmCounter3 = 0;
+   I1_OC_ALARM_STATUS = 0;
+   I2_OC_ALARM_STATUS = 0;
+   I3_OC_ALARM_STATUS = 0;
+}
+
+//****************************************************************************
+/*!
+	@fn				void OCWarningProtection_Init(void)
+	@brief			This function initializes the the variable for OC alert type , conter value and states to
+                                default initial values for OC Warnings.
+
+	@param[in]		-
+
+	@return			-
+*/
+//*****************************************************************************
+void OCWarningProtection_Init(void)
+{
+   I1_OC_WARNING_TIMER.State = OCTimerDisabled;
+   I2_OC_WARNING_TIMER.State = OCTimerDisabled;
+   I3_OC_WARNING_TIMER.State = OCTimerDisabled;
+   FCM_Protection.OC_WarningCounter1 = 0;
+   FCM_Protection.OC_WarningCounter2 = 0;
+   FCM_Protection.OC_WarningCounter3 = 0;
+   I1_OC_WARNING_STATUS = 0;
+   I2_OC_WARNING_STATUS = 0;
+   I3_OC_WARNING_STATUS = 0;
+}
+
+//****************************************************************************
+/*!
+	@fn				void CurrentProtection(void)
+	@brief			This function detects and updates OC Alarm / Warning alert type and time.
+                                runs the counters for OC Alarm / Warning  time.
+
+	@param[in]		-
+
+	@return			-
+*/
+//*****************************************************************************
+void CurrentProtection(void)
+{
+   static CPU_INT08U                      MaxAlarmType = 0, MaxWarningType = 0;
+
+   OverCurrentAlarmDetection(&MaxAlarmType);
+   OverCurrentWarningDetection(&MaxWarningType);
+
+   OCAlarmUpdateEvent(MaxAlarmType);
+   OCWarningUpdateEvent(MaxWarningType);
+
+   /**< Run the counters. */
+   OverCurrentAlarmTimerI1();
+   OverCurrentAlarmTimerI2();
+   OverCurrentAlarmTimerI3();
+   OverCurrentWarningTimerI1();
+   OverCurrentWarningTimerI2();
+   OverCurrentWarningTimerI3();
+}
+
+/**
+ * OverCurrentAlarmDetection
+ * --------------------------------------------------------- */
+//****************************************************************************
+/*!
+	@fn				void OverCurrentAlarmDetection(CPU_INT08U *AlarmType)
+	@brief			This function checks all phase currents for OC Alarm.
+                                
+
+	@param[in]		-
+
+	@return			-
+*/
+//*****************************************************************************
+void OverCurrentAlarmDetection(CPU_INT08U *AlarmType)
+{
+   CPU_INT16U limit, OC_alarm_reset_limit, PrimaryCurrent;
+
+   PrimaryCurrent = gConfigAndRecords.FCM_Parameters.SYS_PrimaryCurrent;
+
+   if (gConfigAndRecords.FCM_Parameters.PROT_IMAX_Alarm_Enable)
+   {
+      limit = gConfigAndRecords.FCM_Parameters.PROT_IMAX_Alarm; /**< Lets compute the actual limit of the Alarm */
+      OC_alarm_reset_limit =
+         (gConfigAndRecords.FCM_Parameters.PROT_IMAX_Alarm) - ((PrimaryCurrent * 5) / 100);
+
+      OverCurrentAlarmDetectionI1(AlarmType, limit, OC_alarm_reset_limit);
+      OverCurrentAlarmDetectionI2(AlarmType, limit, OC_alarm_reset_limit);
+      OverCurrentAlarmDetectionI3(AlarmType, limit, OC_alarm_reset_limit);
+
+   }
+   else
+   {
+      *AlarmType = 0; /**< If OC Alarm Threshold is zero , clear the alarm indication*/
+      OCAlarmProtection_Init(); /**< If OC Alarm Threshold is zero , clear the counter value , states and corresponding varaiable */
+   }
+}
+
+/**
+ * OverCurrentAlarmDetectionI1
+ * --------------------------------------------------------- */
+//****************************************************************************
+/*!
+	@fn				void OverCurrentAlarmDetectionI1(CPU_INT16U Limit, CPU_INT16U ResetLimit
+	@brief			This function checks phase 1 current for OC Alarm. OC Alarm is detected if current exceeds 
+                                OC Alarm Threshold parametr value . OC Alarm is cleared if current falls by 5% of Primary current.
+                                Hysterysis band is of 5% of primary current.
+                                
+
+	@param[in]		Limit - OC Alarm Threshold parameter value
+
+        @param[in]		ResetLimit - ResetLimit = ( gConfigAndRecords.FCM_Parameters.PROT_IMAX_Alarm ) - (( PrimaryCurrent * 5)/100)
+
+	@return			-
+*/
+//*****************************************************************************
+void OverCurrentAlarmDetectionI1(CPU_INT08U *AlarmType, CPU_INT16U Limit, CPU_INT16U ResetLimit)
+{
+   if (MeasCurrentI1.ValueU16 >= Limit) /**< Check for I1 OC Alarm Occured */
+   {
+      if (Record_I1_Alarm_Time == 0)
+      {
+         RTC_GetTime(&gConfigAndRecords.OV_UV_OC_Alert.FCM_OCAlarm.AlertTime);
+         Record_I1_Alarm_Time = 1;
+      }
+      if (I1_OC_ALARM_TIMER.State != OCTimerSaturated)
+      {
+         I1_OC_ALARM_TIMER.State = OCTimerActive;
+      }
+      if (I1_OC_ALARM_TIMER.State == OCTimerSaturated)
+      {
+         *AlarmType |= CURRENT_ALERT_I1;
+         if (I1_OC_ALARM_STATUS == 0)
+         {
+            I1_OC_ALARM_STATUS = 1;
+         }
+      }
+   } else if (MeasCurrentI1.ValueU16 < ResetLimit) /**< Check for I1 OC Alarm Cleared */
+   {
+      *AlarmType &= ~CURRENT_ALERT_I1;
+      I1_OC_ALARM_STATUS = 0;
+      I1_OC_ALARM_TIMER.State = OCTimerDisabled;
+      FCM_Protection.OC_AlarmCounter1 = 0;
+      Record_I1_Alarm_Time = 0;
+   } else
+   {
+      if (I1_OC_ALARM_STATUS == 1)
+      {
+         /**< Do nothing in Hysteresys Window while I 1 OC Alarm is present */
+      } else
+      {
+         I1_OC_ALARM_TIMER.State = OCTimerDisabled; /**< No I1 OC Alarm  */
+         FCM_Protection.OC_AlarmCounter1 = 0;
+         Record_I1_Alarm_Time = 0;
+      }
+   }
+}
+
+/**
+ * OverCurrentAlarmDetectionI2
+ * --------------------------------------------------------- */
+//****************************************************************************
+/*!
+	@fn				void OverCurrentAlarmDetectionI2(CPU_INT16U Limit, CPU_INT16U ResetLimit)
+	@brief			This function checks phase 2 current for OC Alarm. OC Alarm is detected if current exceeds 
+                                OC Alarm Threshold parametr value . OC Alarm is cleared if current falls by 5% of Primary current.
+                                Hysterysis band is of 5% of primary current.
+                                
+
+	@param[in]		Limit - OC Alarm Threshold parameter value
+
+        @param[in]		ResetLimit - ResetLimit = ( gConfigAndRecords.FCM_Parameters.PROT_IMAX_Alarm ) - (( PrimaryCurrent * 5)/100)
+
+	@return			-
+*/
+//*****************************************************************************
+void OverCurrentAlarmDetectionI2(CPU_INT08U *AlarmType, CPU_INT16U Limit, CPU_INT16U ResetLimit)
+{
+   if (MeasCurrentI2.ValueU16 >= Limit) /**< Check for I2 OC Alarm Occured */
+   {
+      if (Record_I2_Alarm_Time == 0)
+      {
+         RTC_GetTime(&gConfigAndRecords.OV_UV_OC_Alert.FCM_OCAlarm.AlertTime);
+         Record_I2_Alarm_Time = 1;
+      }
+      if (I2_OC_ALARM_TIMER.State != OCTimerSaturated)
+      {
+         I2_OC_ALARM_TIMER.State = OCTimerActive;
+      }
+      if (I2_OC_ALARM_TIMER.State == OCTimerSaturated)
+      {
+         *AlarmType |= CURRENT_ALERT_I2;
+         if (I2_OC_ALARM_STATUS == 0)
+         {
+            I2_OC_ALARM_STATUS = 1;
+         }
+      }
+   } else if (MeasCurrentI2.ValueU16 < ResetLimit) /**< Check for I2 OC Alarm Cleared */
+   {
+      *AlarmType &= ~CURRENT_ALERT_I2;
+      I2_OC_ALARM_STATUS = 0;
+      I2_OC_ALARM_TIMER.State = OCTimerDisabled;
+      FCM_Protection.OC_AlarmCounter2 = 0;
+      Record_I2_Alarm_Time = 0;
+   } else
+   {
+      if (I2_OC_ALARM_STATUS == 1)
+      {
+         /**< Do nothing in Hysteresys Window while I2 OC Alarm is present */
+      } else
+      {
+         I2_OC_ALARM_TIMER.State = OCTimerDisabled; /**< No I2 OC Alarm  */
+         FCM_Protection.OC_AlarmCounter2 = 0;
+         Record_I2_Alarm_Time = 0;
+      }
+   }
+}
+
+/**
+ * OverCurrentAlarmDetectionI3
+ * --------------------------------------------------------- */
+//****************************************************************************
+/*!
+	@fn				void OverCurrentAlarmDetectionI3(CPU_INT16U Limit, CPU_INT16U ResetLimit)
+	@brief			This function checks phase 3 current for OC Alarm. OC Alarm is detected if current exceeds 
+                                OC Alarm Threshold parametr value . OC Alarm is cleared if current falls by 5% of Primary current.
+                                Hysterysis band is of 5% of primary current.
+                                
+
+	@param[in]		Limit - OC Alarm Threshold parameter value
+
+        @param[in]		ResetLimit - ResetLimit = ( gConfigAndRecords.FCM_Parameters.PROT_IMAX_Alarm ) - (( PrimaryCurrent * 5)/100)
+
+	@return			-
+*/
+//*****************************************************************************
+void OverCurrentAlarmDetectionI3(CPU_INT08U *AlarmType, CPU_INT16U Limit, CPU_INT16U ResetLimit)
+{
+   if (MeasCurrentI3.ValueU16 >= Limit) /**< Check for I3 OC Alarm Occured */
+   {
+      if (Record_I3_Alarm_Time == 0)
+      {
+         RTC_GetTime(&gConfigAndRecords.OV_UV_OC_Alert.FCM_OCAlarm.AlertTime);
+         Record_I3_Alarm_Time = 1;
+      }
+      if (I3_OC_ALARM_TIMER.State != OCTimerSaturated)
+      {
+         I3_OC_ALARM_TIMER.State = OCTimerActive;
+      }
+      if (I3_OC_ALARM_TIMER.State == OCTimerSaturated)
+      {
+         *AlarmType |= CURRENT_ALERT_I3;
+         if (I3_OC_ALARM_STATUS == 0)
+         {
+            I3_OC_ALARM_STATUS = 1;
+         }
+      }
+   } else if (MeasCurrentI3.ValueU16 < ResetLimit) /**< Check for I3 OC Alarm Cleared */
+   {
+      *AlarmType &= ~CURRENT_ALERT_I3;
+      I3_OC_ALARM_STATUS = 0;
+      I3_OC_ALARM_TIMER.State = OCTimerDisabled;
+      FCM_Protection.OC_AlarmCounter3 = 0;
+      Record_I3_Alarm_Time = 0;
+   } else
+   {
+      if (I3_OC_ALARM_STATUS == 1)
+      {
+         /**< Do nothing in Hysteresys Window while I3 OC Alarm is present */
+      } else
+      {
+         I3_OC_ALARM_TIMER.State = OCTimerDisabled; /**< No I3 OC Alarm  */
+         FCM_Protection.OC_AlarmCounter3 = 0;
+         Record_I3_Alarm_Time = 0;
+      }
+   }
+}
+
+//****************************************************************************
+/*!
+   @fn              void OCAlarmUpdateEvent(CPU_INT08U AlarmType)
+   @brief         This function update event for Over current alarm
+
+   @param[in]     Alarm Type  - detected OC alarm type
+
+   @return        -
+
+*/
+//*****************************************************************************
+void OCAlarmUpdateEvent(CPU_INT08U AlarmType)
+{
+   if (AlarmType != CPrevMaxAlarmType)
+   {
+      if (AlarmType)
+      {
+         if (AlarmType > CPrevMaxAlarmType)
+         {
+            gConfigAndRecords.OV_UV_OC_Alert.FCM_OCAlarm.AlertType = AlarmType;
+            UpdateOCAlarmOnFlash = 1;
+
+            AppBO_BOCheck(BOOCAlarmOperate, BOOCAlarmOperate, AppBO_ON);
+            g_FaultTypeOV_UV_OC |=
+               (FAULT_TYPE_OC_ALARM | FAULT_TYPE_OV_UV_OC_OPERATE | FAULT_TYPE_OV_UV_OC_RAISED | (AlarmType << FAULT_TYPE_OV_UV_OC_PHASE_BIT_POS));
+            PRINTF_SSB("\nOC Alarm raised\r\n");
+            TripLogic_TaskPost();
+            gConfigAndRecords.OV_UV_OC_Counter.OC_AlarmCounter++;
+         }
+      }
+      else
+      {
+         AppBO_BOCheck(BOOCAlarmOperate, BOOCAlarmOperate, AppBO_OFF);
+         g_FaultTypeOV_UV_OC |=
+            (FAULT_TYPE_OC_ALARM | FAULT_TYPE_OV_UV_OC_OPERATE | FAULT_TYPE_OV_UV_OC_CLEARED);
+         PRINTF_SSB("\nOC Alarm cleared\r\n");
+         TripLogic_TaskPost();
+      }
+   }
+   CPrevMaxAlarmType = AlarmType;
+}
+
+/**
+ * OverCurrentWarningDetection
+ * --------------------------------------------------------- */
+//****************************************************************************
+/*!
+	@fn				void OverCurrentWarningDetection(void)
+	@brief			This function checks all  phase currents for OC Warning.
+                                
+
+	@param[in]		-
+
+	@return			-
+*/
+//*****************************************************************************
+void OverCurrentWarningDetection(CPU_INT08U *AlarmType)
+{
+   CPU_INT16U limit, PrimaryCurrent, OC_warning_reset_limit;
+
+   PrimaryCurrent = gConfigAndRecords.FCM_Parameters.SYS_PrimaryCurrent;
+
+   if (gConfigAndRecords.FCM_Parameters.PROT_IMAX_Warning_Enable) /**< The monitor is available only for non zero percentage */
+   {
+      limit = gConfigAndRecords.FCM_Parameters.PROT_IMAX_Warning; /**< Lets compute the actual limit of the Alarm */
+      OC_warning_reset_limit =
+         (gConfigAndRecords.FCM_Parameters.PROT_IMAX_Warning) - ((PrimaryCurrent * 5) / 100);
+
+      OverCurrentWarningDetectionI1(AlarmType, limit, OC_warning_reset_limit);
+      OverCurrentWarningDetectionI2(AlarmType, limit, OC_warning_reset_limit);
+      OverCurrentWarningDetectionI3(AlarmType, limit, OC_warning_reset_limit);
+
+   } else
+   {
+      *AlarmType = 0; /**< If OC Warning Threshold is zero , clear the Threshold indication*/
+      OCWarningProtection_Init(); /**< If OC Warning Threshold is zero , clear the counter value , states and corresponding varaiable */
+   }
+}
+
+/**
+ * OverCurrentWarningDetectionI1
+ * --------------------------------------------------------- */
+//****************************************************************************
+/*!
+	@fn				void OverCurrentWarningDetectionI1(CPU_INT16U Limit, CPU_INT16U ResetLimit)
+	@brief			This function checks phase 1 current for OC Warning. OC Warning is detected if current exceeds 
+                                OC Warning Threshold parametr value . OC Warning is cleared only if current falls by 5% of Primary current.
+                                Hysterysis band is of 5% of primary current.
+                                
+
+	@param[in]		Limit - OC Warning Threshold parameter value
+
+        @param[in]		ResetLimit - ResetLimit = ( gConfigAndRecords.FCM_Parameters.PROT_IMAX_Warning ) - (( PrimaryCurrent * 5)/100)
+
+	@return			-
+*/
+//*****************************************************************************
+void OverCurrentWarningDetectionI1(CPU_INT08U *AlarmType, CPU_INT16U Limit, CPU_INT16U ResetLimit)
+{
+   if (MeasCurrentI1.ValueU16 >= Limit) /**< Check for I1 OC Warning Occured */
+   {
+      if (Record_I1_Warning_Time == 0)
+      {
+         RTC_GetTime(&gConfigAndRecords.OV_UV_OC_Alert.FCM_OCWarning.AlertTime);
+         Record_I1_Warning_Time = 1;
+      }
+      if (I1_OC_WARNING_TIMER.State != OCTimerSaturated)
+      {
+         I1_OC_WARNING_TIMER.State = OCTimerActive;
+      }
+      if (I1_OC_WARNING_TIMER.State == OCTimerSaturated)
+      {
+         *AlarmType |= CURRENT_ALERT_I1;
+         if (I1_OC_WARNING_STATUS == 0)
+         {
+            I1_OC_WARNING_STATUS = 1;
+         }
+      }
+   } else if (MeasCurrentI1.ValueU16 < ResetLimit) /**< Check for I1 OC Warning Cleared */
+   {
+      *AlarmType &= ~CURRENT_ALERT_I1;
+      I1_OC_WARNING_STATUS = 0;
+      I1_OC_WARNING_TIMER.State = OCTimerDisabled;
+      FCM_Protection.OC_WarningCounter1 = 0;
+      Record_I1_Warning_Time = 0;
+   } else
+   {
+      if (I1_OC_WARNING_STATUS == 1)
+      {
+         /**< Do nothing in Hysteresys Window while I1 OC Warning is present */
+      } else
+      {
+         I1_OC_WARNING_TIMER.State = OCTimerDisabled; /**< No I1 OC Warning  */
+         FCM_Protection.OC_WarningCounter1 = 0;
+         Record_I1_Warning_Time = 0;
+      }
+   }
+}
+
+/**
+ * OverCurrentWarningDetectionI2
+ * --------------------------------------------------------- */
+//****************************************************************************
+/*!
+	@fn				void OverCurrentWarningDetectionI2(CPU_INT16U Limit, CPU_INT16U ResetLimit)
+	@brief			This function checks phase 2 current for OC Warning. OC Warning is detected if current exceeds 
+                                OC Warning Threshold parametr value . OC Warning is cleared only if current falls by 5% of Primary current.
+                                Hysterysis band is of 5% of primary current.
+                                
+
+	@param[in]		Limit - OC Warning Threshold parameter value
+
+        @param[in]		ResetLimit - ResetLimit = ( gConfigAndRecords.FCM_Parameters.PROT_IMAX_Warning ) - (( PrimaryCurrent * 5)/100)
+
+	@return			-
+*/
+//*****************************************************************************
+void OverCurrentWarningDetectionI2(CPU_INT08U *AlarmType, CPU_INT16U Limit, CPU_INT16U ResetLimit)
+{
+   if (MeasCurrentI2.ValueU16 >= Limit) /**< Check for I2 OC Warning Occured */
+   {
+      if (Record_I2_Warning_Time == 0)
+      {
+         RTC_GetTime(&gConfigAndRecords.OV_UV_OC_Alert.FCM_OCWarning.AlertTime);
+         Record_I2_Warning_Time = 1;
+      }
+      if (I2_OC_WARNING_TIMER.State != OCTimerSaturated)
+      {
+         I2_OC_WARNING_TIMER.State = OCTimerActive;
+      }
+      if (I2_OC_WARNING_TIMER.State == OCTimerSaturated)
+      {
+         *AlarmType |= CURRENT_ALERT_I2;
+         if (I2_OC_WARNING_STATUS == 0)
+         {
+            I2_OC_WARNING_STATUS = 1;
+         }
+      }
+   } else if (MeasCurrentI2.ValueU16 < ResetLimit) /**< Check for I2 OC Warning Cleared */
+   {
+      *AlarmType &= ~CURRENT_ALERT_I2;
+      I2_OC_WARNING_STATUS = 0;
+      I2_OC_WARNING_TIMER.State = OCTimerDisabled;
+      FCM_Protection.OC_WarningCounter2 = 0;
+      Record_I2_Warning_Time = 0;
+   } else
+   {
+      if (I2_OC_WARNING_STATUS == 1)
+      {
+         /**< Do nothing in Hysteresys Window while I2 OC Warning is present */
+      } else
+      {
+         I2_OC_WARNING_TIMER.State = OCTimerDisabled; /**< No I2 OC Warning  */
+         FCM_Protection.OC_WarningCounter2 = 0;
+         Record_I2_Warning_Time = 0;
+      }
+   }
+}
+
+/**
+ * OverCurrentWarningDetectionI3
+ * --------------------------------------------------------- */
+//****************************************************************************
+/*!
+	@fn				void OverCurrentWarningDetectionI3(CPU_INT16U Limit, CPU_INT16U ResetLimit)
+	@brief			This function checks phase 3 current for OC Warning. OC Warning is detected if current exceeds 
+                                OC Warning Threshold parametr value . OC Warning is cleared only if current falls by 5% of Primary current.
+                                Hysterysis band is of 5% of primary current.
+                                
+
+	@param[in]		Limit - OC Warning Threshold parameter value
+
+        @param[in]		ResetLimit - ResetLimit = ( gConfigAndRecords.FCM_Parameters.PROT_IMAX_Warning ) - (( PrimaryCurrent * 5)/100)
+
+	@return			-
+*/
+//*****************************************************************************
+void OverCurrentWarningDetectionI3(CPU_INT08U *AlarmType, CPU_INT16U Limit, CPU_INT16U ResetLimit)
+{
+   if (MeasCurrentI3.ValueU16 >= Limit) /**< Check for I3 OC Warning Occured */
+   {
+      if (Record_I3_Warning_Time == 0)
+      {
+         RTC_GetTime(&gConfigAndRecords.OV_UV_OC_Alert.FCM_OCWarning.AlertTime);
+         Record_I3_Warning_Time = 1;
+      }
+      if (I3_OC_WARNING_TIMER.State != OCTimerSaturated)
+      {
+         I3_OC_WARNING_TIMER.State = OCTimerActive;
+      }
+      if (I3_OC_WARNING_TIMER.State == OCTimerSaturated)
+      {
+         *AlarmType |= CURRENT_ALERT_I3;
+         if (I3_OC_WARNING_STATUS == 0)
+         {
+            I3_OC_WARNING_STATUS = 1;
+         }
+      }
+   } else if (MeasCurrentI3.ValueU16 < ResetLimit) /**< Check for I3 OC Warning Cleared */
+   {
+      *AlarmType &= ~CURRENT_ALERT_I3;
+      I3_OC_WARNING_STATUS = 0;
+      I3_OC_WARNING_TIMER.State = OCTimerDisabled;
+      FCM_Protection.OC_WarningCounter3 = 0;
+      Record_I3_Warning_Time = 0;
+   } else
+   {
+      if (I3_OC_WARNING_STATUS == 1)
+      {
+         /**< Do nothing in Hysteresys Window while I3 OC Warning is present */
+      } else
+      {
+         I3_OC_WARNING_TIMER.State = OCTimerDisabled; /**< No I3 OC Warning  */
+         FCM_Protection.OC_WarningCounter3 = 0;
+         Record_I3_Warning_Time = 0;
+      }
+   }
+}
+
+//****************************************************************************
+/*!
+   @fn              void OCWarningUpdateEvent(CPU_INT08U AlarmType)
+   @brief         This function update event for Over current warning
+
+   @param[in]     Alarm Type  - detected OC warning type
+
+   @return        -
+
+*/
+//*****************************************************************************
+void OCWarningUpdateEvent(CPU_INT08U AlarmType)
+{
+   if (AlarmType != CPrevMaxWarningType)
+   {
+      if (AlarmType)
+      {
+         if (AlarmType > CPrevMaxWarningType)
+         {
+            gConfigAndRecords.OV_UV_OC_Alert.FCM_OCWarning.AlertType =
+               AlarmType;
+            UpdateOCWarningOnFlash = 1;
+
+            AppBO_BOCheck(BOOCWarningOperate, BOOCWarningOperate, AppBO_ON);
+            g_FaultTypeOV_UV_OC |=
+               (FAULT_TYPE_OC_WARNING | FAULT_TYPE_OV_UV_OC_OPERATE | FAULT_TYPE_OV_UV_OC_RAISED | (AlarmType << FAULT_TYPE_OV_UV_OC_PHASE_BIT_POS));
+            PRINTF_SSB("\nOC Warning raised\r\n");
+            TripLogic_TaskPost();
+            gConfigAndRecords.OV_UV_OC_Counter.OC_WarningCounter++;
+         }
+      }
+      else
+      {
+         AppBO_BOCheck(BOOCWarningOperate, BOOCWarningOperate, AppBO_OFF);
+         g_FaultTypeOV_UV_OC |=
+            (FAULT_TYPE_OC_WARNING | FAULT_TYPE_OV_UV_OC_OPERATE | FAULT_TYPE_OV_UV_OC_CLEARED);
+         PRINTF_SSB("\nOC Warning cleared\r\n");
+         TripLogic_TaskPost();
+      }
+   }
+   CPrevMaxWarningType = AlarmType;
+}
+
+/**
+ * OverCurrentAlarmTimerI1
+ * --------------------------------------------------------- */
+//****************************************************************************
+/*!
+	@fn				void OverCurrentAlarmTimerI1(void)
+	@brief			This function runs OC Alarm timer for detecting phase 1 OC Alarm and checks if OC ALarm time is expired or not.
+                                
+
+	@param[in]		-
+
+        @return			-
+*/
+//*****************************************************************************
+void OverCurrentAlarmTimerI1(void)
+{
+   if (I1_OC_ALARM_TIMER.State == OCTimerActive)
+   {
+
+      if (FCM_Protection.OC_AlarmCounter1 < FCM_Protection.OC_LtAlarm)
+      {
+         FCM_Protection.OC_AlarmCounter1 += ALARM_WARNING_TASK_SCHEDULE_TIME;
+      } else
+      {
+         I1_OC_ALARM_TIMER.State = OCTimerSaturated;
+      }
+   }
+}
+
+/**
+ * OverCurrentAlarmTimerI2
+ * --------------------------------------------------------- */
+//****************************************************************************
+/*!
+	@fn				void OverCurrentAlarmTimerI2(void)
+	@brief			This function runs OC Alarm timer for detecting phase 2 OC Alarm and checks if OC ALarm time is expired or not.
+                                
+
+	@param[in]		-
+
+        @return			-
+*/
+//*****************************************************************************
+void OverCurrentAlarmTimerI2(void)
+{
+   if (I2_OC_ALARM_TIMER.State == OCTimerActive)
+   {
+      if (FCM_Protection.OC_AlarmCounter2 < FCM_Protection.OC_LtAlarm)
+      {
+         FCM_Protection.OC_AlarmCounter2 += ALARM_WARNING_TASK_SCHEDULE_TIME;
+      } else
+      {
+         I2_OC_ALARM_TIMER.State = OCTimerSaturated;
+      }
+   }
+}
+
+/**
+ * OverCurrentAlarmTimerI3
+ * --------------------------------------------------------- */
+//****************************************************************************
+/*!
+	@fn				void OverCurrentAlarmTimerI3(void)
+	@brief			This function runs OC Alarm timer for detecting phase3 OC Alarm and checks if OC ALarm time is expired or not.
+                                
+
+	@param[in]		-
+
+        @return			-
+*/
+//*****************************************************************************
+void OverCurrentAlarmTimerI3(void)
+{
+   if (I3_OC_ALARM_TIMER.State == OCTimerActive)
+   {
+      if (FCM_Protection.OC_AlarmCounter3 < FCM_Protection.OC_LtAlarm)
+      {
+         FCM_Protection.OC_AlarmCounter3 += ALARM_WARNING_TASK_SCHEDULE_TIME;
+      } else
+      {
+         I3_OC_ALARM_TIMER.State = OCTimerSaturated;
+      }
+   }
+}
+
+/**
+ * OverCurrentWarningTimerI1
+ * --------------------------------------------------------- */
+//****************************************************************************
+/*!
+	@fn				void OverCurrentWarningTimerI1(void)
+	@brief			This function runs OC Warning timer for detecting phase 1 OC Warningand checks if OC Warning time is expired or not.
+                                
+
+	@param[in]		-
+
+        @return			-
+*/
+//*****************************************************************************
+void OverCurrentWarningTimerI1(void)
+{
+   if (I1_OC_WARNING_TIMER.State == OCTimerActive)
+   {
+      if (FCM_Protection.OC_WarningCounter1 < FCM_Protection.OC_LtWarning)
+      {
+         FCM_Protection.OC_WarningCounter1 += ALARM_WARNING_TASK_SCHEDULE_TIME;
+      } else
+      {
+         I1_OC_WARNING_TIMER.State = OCTimerSaturated;
+      }
+   }
+}
+
+/**
+ * OverCurrentWarningTimerI2
+ * --------------------------------------------------------- */
+//****************************************************************************
+/*!
+	@fn				void OverCurrentWarningTimerI2(void)
+	@brief			This function runs OC Warning timer for detecting phase 2 OC Warningand checks if OC Warning time is expired or not.
+                                
+
+	@param[in]		-
+
+        @return			-
+*/
+//*****************************************************************************
+void OverCurrentWarningTimerI2(void)
+{
+   if (I2_OC_WARNING_TIMER.State == OCTimerActive)
+   {
+      if (FCM_Protection.OC_WarningCounter2 < FCM_Protection.OC_LtWarning)
+      {
+         FCM_Protection.OC_WarningCounter2 += ALARM_WARNING_TASK_SCHEDULE_TIME;
+      } else
+      {
+         I2_OC_WARNING_TIMER.State = OCTimerSaturated;
+      }
+   }
+}
+
+/**
+ * OverCurrentWarningTimerI3
+ * --------------------------------------------------------- */
+//****************************************************************************
+/*!
+	@fn				void OverCurrentWarningTimerI3(void)
+	@brief			This function runs OC Warning timer for detecting phase 3 OC Warningand checks if OC Warning time is expired or not.
+                                
+
+	@param[in]		-
+
+        @return			-
+*/
+//*****************************************************************************
+void OverCurrentWarningTimerI3(void)
+{
+   if (I3_OC_WARNING_TIMER.State == OCTimerActive)
+   {
+      if (FCM_Protection.OC_WarningCounter3 < FCM_Protection.OC_LtWarning)
+      {
+         FCM_Protection.OC_WarningCounter3 += ALARM_WARNING_TASK_SCHEDULE_TIME;
+      } else
+      {
+         I3_OC_WARNING_TIMER.State = OCTimerSaturated;
+      }
+   }
+}
+
+/*!
+	@fn			void OpenPhaseDetectionInit(void)
+	@brief			This Function initializes the variables used for open phase detection variables
+                                
+
+	@param[in]		-
+
+        @return			-
+*/
+//*****************************************************************************
+uint8_t OpenPhaseDetectionInit()
+{
+
+  Open_Phase_Detection.UnderCurrentGuard = gConfigAndRecords.FCM_Parameters.SYS_PrimaryCurrent * gConfigAndRecords.FCM_Parameters.GroupParametersConfig[gConfigAndRecords.FCM_Parameters.ActiveGroup].SYS_U_C_Guard;
+  Open_Phase_Detection.TimeDelay = (gConfigAndRecords.FCM_Parameters.GroupParametersConfig[gConfigAndRecords.FCM_Parameters.ActiveGroup].SYS_TimeDelayOpenPhaseDetect * MS_TO_SECS_MULTIPLIER);
+  Open_Phase_Detection.TimeDelayCounter = 0;
+  Open_Phase_Detection.CurrentState = OPD_INIT;
+  Open_Phase_Detection.FaultLogged = 0;
+  return 0;
+}
+
+/*!
+	@fn			void OpenPhase_Detection(void)
+	@brief			This function implements the state machine to check for open phase fault 
+                                
+
+	@param[in]		-
+
+        @return			-
+*/
+//*****************************************************************************
+uint8_t OpenPhase_Detection()
+{
+  //CPU_INT32U tempEvent=0;
+  switch(Open_Phase_Detection.CurrentState)
+  {
+      case OPD_INIT:
+         // Open_Phase_Detection.I2_I1_Ratio_Threshold = gConfigAndRecords.FCM_Parameters.SYS_I2_I1_Ratio;
+          Open_Phase_Detection.UnderCurrentGuard = gConfigAndRecords.FCM_Parameters.SYS_PrimaryCurrent * gConfigAndRecords.FCM_Parameters.GroupParametersConfig[gConfigAndRecords.FCM_Parameters.ActiveGroup].SYS_U_C_Guard;
+          Open_Phase_Detection.TimeDelay = (CPU_INT32U)(gConfigAndRecords.FCM_Parameters.GroupParametersConfig[gConfigAndRecords.FCM_Parameters.ActiveGroup].SYS_TimeDelayOpenPhaseDetect * (MS_TO_SECS_MULTIPLIER));
+          Open_Phase_Detection.TimeDelayCounter = 0;     
+          Open_Phase_Detection.CurrentState = OPD_START;
+          Open_Phase_Detection.FaultLogged = 0;
+          Open_Phase_Detection.FaultStatus = DEF_FALSE;
+          break;
+          
+  case OPD_START:
+          /**< Check NPS . PPS ratio is greater than the set limit .. If yes then change the state to Pickup *
+              * Also check that either IPPS or INPS are non-zero values  */
+          if( ( (PhSeq_INPS_Magnitude*100) >= (gConfigAndRecords.FCM_Parameters.GroupParametersConfig[gConfigAndRecords.FCM_Parameters.ActiveGroup].SYS_I2_I1_Ratio * PhSeq_IPPS_Magnitude ))
+             && (gConfigAndRecords.FCM_Parameters.GroupParametersConfig[gConfigAndRecords.FCM_Parameters.ActiveGroup].SYS_TimeDelayOpenPhaseDetect != 0)
+			 && (gConfigAndRecords.FCM_Parameters.GroupParametersConfig[gConfigAndRecords.FCM_Parameters.ActiveGroup].SYS_I2_I1_Ratio !=0)
+          && (PhSeq_IPPS_Magnitude !=0))
+          {
+            if( (gConfigAndRecords.FCM_Parameters.GroupParametersConfig[gConfigAndRecords.FCM_Parameters.ActiveGroup].SYS_U_C_Guard != DISABLED) )
+              {
+                  if( ((MeasCurrentI1.ValueU16*100) > Open_Phase_Detection.UnderCurrentGuard )
+				  		|| ( (MeasCurrentI2.ValueU16 *100) > Open_Phase_Detection.UnderCurrentGuard)
+                  || ( (MeasCurrentI3.ValueU16*100) > Open_Phase_Detection.UnderCurrentGuard))
+
+                  {
+                		
+                			 Open_Phase_Detection.CurrentState = OPD_PICKUP
+
+
+                  }else
+                  {
+                      Open_Phase_Detection.CurrentState = OPD_START;
+                  }
+              }
+            else if (MeasCurrentI1.ValueU16 > SUPPRESSION_LIMIT_CURRENT || MeasCurrentI2.ValueU16  > SUPPRESSION_LIMIT_CURRENT  || MeasCurrentI3.ValueU16  > SUPPRESSION_LIMIT_CURRENT)
+            {
+              Open_Phase_Detection.CurrentState = OPD_PICKUP;
+            }
+
+            else
+            {
+            	Open_Phase_Detection.CurrentState = OPD_START;
+            }
+          }
+          else
+          {
+            Open_Phase_Detection.CurrentState = OPD_START;
+          }
+          break;
+          
+      case OPD_PICKUP:
+
+          /**< Check NPS . PPS ratio is greater than the set limit .. If yes then Increment the counter
+           * Also check that either IPPS or INPS are non-zero values  */
+          if( (PhSeq_INPS_Magnitude*100) >= (gConfigAndRecords.FCM_Parameters.GroupParametersConfig[gConfigAndRecords.FCM_Parameters.ActiveGroup].SYS_I2_I1_Ratio * PhSeq_IPPS_Magnitude )
+        		  && (PhSeq_IPPS_Magnitude !=0))
+          {
+              if( (gConfigAndRecords.FCM_Parameters.GroupParametersConfig[gConfigAndRecords.FCM_Parameters.ActiveGroup].SYS_U_C_Guard != DISABLED) )
+              {
+                    if( ( (MeasCurrentI1.ValueU16*100) > Open_Phase_Detection.UnderCurrentGuard ) 
+							|| ( (MeasCurrentI2.ValueU16 *100) > Open_Phase_Detection.UnderCurrentGuard)
+                           || ( (MeasCurrentI3.ValueU16*100) > Open_Phase_Detection.UnderCurrentGuard)  )
+                    {
+                         Open_Phase_Detection.TimeDelayCounter++; /**< increment the counter */
+                    }else
+                    {
+                       Open_Phase_Detection.CurrentState = OPD_INIT;
+                    }
+              }
+              else if (MeasCurrentI1.ValueU16 > SUPPRESSION_LIMIT_CURRENT || MeasCurrentI2.ValueU16  > SUPPRESSION_LIMIT_CURRENT  || MeasCurrentI3.ValueU16  > SUPPRESSION_LIMIT_CURRENT)
+              {
+                    Open_Phase_Detection.TimeDelayCounter++; /**< increment the counter */
+              } 
+          }else
+          {
+              Open_Phase_Detection.CurrentState = OPD_INIT;
+          }
+          
+          /**< Check NPS to PPS ration is greater threshold for more than the time delay ... If yes then change the state to trip */
+          if(Open_Phase_Detection.TimeDelayCounter > (Open_Phase_Detection.TimeDelay-1)) 
+          {
+            Open_Phase_Detection.CurrentState = OPD_TRIP;
+            AppBO_BOCheck(BOOpenPhase, BOOpenPhase, AppBO_ON);
+
+#ifdef OPEN_PHASE_TESTING_CODE_ENABLE
+             FCM_Status.BOA = DEF_TRUE;
+             Relay_UpdateStatus(RELAY_AS_PER_FAULT); 
+#endif
+//             tempEvent |=  FAULT_TYPE_OPEN_PHASE;
+//             /**<  Update the FCM Fault Status to indicate the Open Phase Fault */
+//             Trip_Construct(tempEvent);
+          }
+          break;
+          
+      case OPD_TRIP:   
+             
+             Open_Phase_Detection.CurrentState = OPD_TRIP_RESET;
+             Open_Phase_Detection.FaultStatus = DEF_TRUE;
+             g_OpenPhase = (FAULT_TYPE_OPEN_PHASE | FAULT_TYPE_OPEN_PHASE_OPERATE | FAULT_TYPE_OPEN_PHASE_RAISED ) ;
+             PRINTF_SSB ("\nOpen phase raised\r\n");
+
+             TripLogic_TaskPost();
+          break;
+      case OPD_TRIP_RESET:
+            if( OpenPhaseAutoResetCheck() == DEF_TRUE)
+            {
+                Open_Phase_Detection.CurrentState = OPD_INIT; /* make state machine ready to detect new Open Phase Fault */
+            }
+        break;
+          
+      default:
+        break;
+  }
+  
+  return 0;
+}
+
+/*!
+	@fn			uint8_t OpenPhaseAutoResetCheck(void)
+	@brief			This function implements fault reset for Open Phase Functionality
+                                Hysteresis of 3% of I2_I1_Ratio is considered for reset
+	@param[in]		-
+
+        @return			-
+*/
+//*****************************************************************************
+
+uint8_t OpenPhaseAutoResetCheck()
+{
+    if ( (PhSeq_INPS_Magnitude*100) <= ( (gConfigAndRecords.FCM_Parameters.GroupParametersConfig[gConfigAndRecords.FCM_Parameters.ActiveGroup].SYS_I2_I1_Ratio - HYSTERESIS_VALUE )* PhSeq_IPPS_Magnitude )
+        && (FCM_Fault_Status.OpenPhase & FAULT_TYPE_OPEN_PHASE) && (gConfigAndRecords.FCM_Parameters.TimeBasedAutoReset == 0))
+    {
+          Open_Phase_Detection.FaultStatus = DEF_FALSE;
+
+           /* This will not Clear Open Phase Fault on DI and HMI */
+          PRINTF_SSB ("\nOpen phase cleared\r\n");
+
+           g_OpenPhase = (FAULT_TYPE_OPEN_PHASE | FAULT_TYPE_OPEN_PHASE_OPERATE | FAULT_TYPE_OPEN_PHASE_CLEARED ) ;
+			  AppBO_BOCheck(BOOpenPhase, BOOpenPhase, AppBO_OFF);
+			  TripLogic_TaskPost();
+
+          return DEF_TRUE;    
+    }
+    return DEF_FALSE;
+}
+//! Close the doxygen group for Protection
+//! @}

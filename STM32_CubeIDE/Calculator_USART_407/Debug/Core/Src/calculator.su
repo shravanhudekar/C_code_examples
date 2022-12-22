@@ -1,5 +1,0 @@
-calculator.c:4:10:calculator	24	static
-calculator.c:22:10:add	16	static
-calculator.c:26:10:sub	16	static
-calculator.c:30:10:mul	16	static
-calculator.c:34:10:div	16	static

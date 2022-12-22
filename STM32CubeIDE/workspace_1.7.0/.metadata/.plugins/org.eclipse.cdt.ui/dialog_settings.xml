@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<item key="LastUsedHeaderTemplate" value="Default C header template"/>
+	<item key="LastUsedSourceTemplate" value="Default C source template"/>
+	<section name="completion_proposal_size">
+		<item key="size.x" value="427"/>
+		<item key="size.y" value="252"/>
+	</section>
+	<section name="org.eclipse.cdt.ui.text.hover.CMacroExpansionExploration">
+	</section>
+	<section name="PDOMSearchPage">
+		<item key="caseSensitive" value="false"/>
+		<item key="searchFlags" value="227191"/>
+		<list key="previousPatterns">
+			<item value="COUNTER"/>
+			<item value="HAL_UART_IRQHandler"/>
+			<item value="__io_getchar"/>
+			<item value="_write"/>
+			<item value="__IO"/>
+			<item value="__io"/>
+			<item value="value2Save"/>
+			<item value="Group"/>
+			<item value="Edit_I2_I1_Ratio"/>
+			<item value="newValue"/>
+			<item value="SYS_I2_I1_Ratio"/>
+			<item value="VoltageRange"/>
+			<item value="SIZE"/>
+			<item value="PSIZE"/>
+			<item value="FLASH"/>
+			<item value="FLASH_CR"/>
+			<item value="PRINTF_SSB"/>
+			<item value="FaultEventType1_50_1"/>
+			<item value="OpenPhase"/>
+			<item value="g_OpenPhase"/>
+			<item value="reset"/>
+			<item value="g_FaultType51_1"/>
+			<item value="g_FaultType50_1"/>
+			<item value="TripLogic_TaskPost"/>
+			<item value="EVENT_DATA_END_INDEX"/>
+			<item value="PHASE_FAULT_50_1"/>
+			<item value="FCM_Fault_StatusOpenPhase"/>
+			<item value="SYS_U_C_Guard"/>
+			<item value="OPEN_PHASE_FAULT_TYPE"/>
+			<item value="MODBUS_OPEN_PHASE_FAULT"/>
+			<item value="Matrix"/>
+			<item value="FAULT_TYPE_OPEN_PHASE"/>
+			<item value="FaultEventType2_50N_2"/>
+			<item value="SECS_5MS_MULTIPLIER"/>
+			<item value="Open_Phase_DetectionFaultStatus"/>
+			<item value="CallInterval"/>
+			<item value="OpenPhase_Detection"/>
+		</list>
+	</section>
+	<section name="org.eclipse.cdt.ui.OPEN_ACTION_SELECTION_DIALOG_SECTION">
+		<item key="DIALOG_X_ORIGIN" value="769"/>
+		<item key="DIALOG_Y_ORIGIN" value="236"/>
+		<item key="DIALOG_WIDTH" value="1002"/>
+		<item key="DIALOG_HEIGHT" value="438"/>
+		<item key="DIALOG_FONT_NAME" value="1|Segoe UI|9.0|0|WINDOWS|1|-12|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI"/>
+	</section>
+	<section name="org.eclipse.cdt.internal.ui.text.QuickOutline">
+		<item key="org.eclipse.cdt.internal.ui.text.COutlineInformationControlDIALOG_WIDTH" value="350"/>
+		<item key="org.eclipse.cdt.internal.ui.text.COutlineInformationControlDIALOG_HEIGHT" value="300"/>
+		<item key="org.eclipse.cdt.internal.ui.text.COutlineInformationControlDIALOG_X_ORIGIN" value="914"/>
+		<item key="org.eclipse.cdt.internal.ui.text.COutlineInformationControlDIALOG_Y_ORIGIN" value="436"/>
+		<item key="org.eclipse.cdt.internal.ui.text.COutlineInformationControlDIALOG_USE_PERSISTED_SIZE" value="true"/>
+		<item key="org.eclipse.cdt.internal.ui.text.COutlineInformationControlDIALOG_USE_PERSISTED_LOCATION" value="true"/>
+	</section>
+	<section name="org.eclipse.cdt.ui.text.hover.CMacroExpansionExploration.internal">
+		<item key="size.width" value="521"/>
+		<item key="size.height" value="180"/>
+	</section>
+	<section name="org.eclipse.cdt.internal.ui.includebrowser.IBViewPart">
+		<item key="inactiveFilter" value="false"/>
+		<item key="systemFilter" value="false"/>
+		<item key="includedBy" value="false"/>
+		<item key="showFolders" value="false"/>
+	</section>
+	<section name="org.eclipse.cdt.internal.ui.typehierarchy.OpenTypeInHierarchyActionSettings">
+		<item key="show_namespaces" value="false"/>
+		<item key="show_classes" value="true"/>
+		<item key="show_structs" value="true"/>
+		<item key="show_typedefs" value="true"/>
+		<item key="show_enums" value="true"/>
+		<item key="show_unions" value="true"/>
+		<item key="show_functions" value="false"/>
+		<item key="show_variables" value="false"/>
+		<item key="show_enumerators" value="false"/>
+		<item key="show_macros" value="false"/>
+		<item key="show_lowlevel" value="true"/>
+		<item key="x" value="1224"/>
+		<item key="y" value="138"/>
+		<item key="width" value="432"/>
+		<item key="height" value="663"/>
+	</section>
+	<section name="CResourceRenameRefactoringInputPage">
+		<item key="updateReferences" value="true"/>
+	</section>
+	<section name="org.eclipse.cdt.internal.ui.browser.opentype.OpenTypeActionSettings">
+		<item key="show_namespaces" value="true"/>
+		<item key="show_classes" value="true"/>
+		<item key="show_structs" value="true"/>
+		<item key="show_typedefs" value="true"/>
+		<item key="show_enums" value="true"/>
+		<item key="show_unions" value="true"/>
+		<item key="show_functions" value="true"/>
+		<item key="show_variables" value="true"/>
+		<item key="show_enumerators" value="true"/>
+		<item key="show_macros" value="true"/>
+		<item key="show_lowlevel" value="true"/>
+		<item key="x" value="678"/>
+		<item key="y" value="66"/>
+		<item key="width" value="565"/>
+		<item key="height" value="681"/>
+	</section>
+</section>

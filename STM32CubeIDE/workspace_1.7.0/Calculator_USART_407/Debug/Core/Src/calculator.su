@@ -1,0 +1,5 @@
+calculator.c:5:10:calculator	32	static
+calculator.c:34:10:add	16	static
+calculator.c:38:10:sub	16	static
+calculator.c:42:10:mul	16	static
+calculator.c:46:10:division	16	static

@@ -1,0 +1,365 @@
+
+/**
+ * Filename      : FCMIncludes.h
+ * Version       : V1.00
+ * Programmer(s) : IN219394
+ *
+ */
+/** @file FCMIncludes.h
+ *  @brief File inclusion and general Macro definition
+ */
+//! \addtogroup Main
+//! @{
+
+#ifndef  INCLUDES_H_
+#define  INCLUDES_H_
+
+#ifndef EXIT_SUCCESS
+#define EXIT_SUCCESS  0
+#endif
+
+/**
+ * @brief DEFINES
+ */
+
+/*!
+	@def 		DEM_CR_TRCENA
+	@brief	Enable Cortex-M4's DWT CYCCNT reg.
+ */
+#define DEM_CR_TRCENA                                    (1 << 24)
+
+/*!
+	@def 		DWTCR_CYCCNTENA
+	@brief	Enable Cortex-M4's DWT CYCCNT reg.
+ */
+#define DWTCR_CYCCNTENA                                  (1 << 0)
+
+/* Interrupt definition template */
+#if !defined(MY_ISR)
+  #define MY_ISR(ISR_name) void ISR_name(void)
+#endif
+#ifndef NULL
+#define NULL ((void *)0)
+#endif
+
+
+/*!
+	@def 		NVMEM_FWUPGRADESIGNATURE
+	@brief	Signature to Upgrade the firmware
+ */
+#define NVMEM_FWUPGRADESIGNATURE                         0xAA
+
+/*!
+	@def 		BOOT_MODE_BOOTLOADER
+	@brief	Bootloader mode, Bootloader FW will expect firmware upgradation
+ */
+#define BOOT_MODE_BOOTLOADER                             0x0001
+
+/*!
+	@def 		BOOT_MODE_APPLICATION
+	@brief	Application firmware to run
+ */
+#define BOOT_MODE_APPLICATION                            0x0000
+
+#define NDEBUG
+
+
+//#define DO_NOT_AUTOCALIBRATE_ADC /* Uncomment this when disable autocalibration*/
+#define FLOAT_PT_ANG /* Uncomment this when Phase and Angle calculation by floating point datatypes*/
+//#define FIXED_PT_ANG /* Uncomment this when Phase and Angle calculation by fixed point datatypes less accuracy with respect to floating point but better takes less time */
+#define POWER_AVG_ENABLED /* Comment this definition when the average computation of Apparent , Active and Reactive Power is not required*/
+#if !defined(FLOAT_PT_ANG)&&!defined(FIXED_PT_ANG)
+  #error "FLOAT_PT_ANG, FIXED_PT_ANG - Any one of the method must be defined for calculations."
+#endif
+#if defined(FLOAT_PT_ANG)&&defined(FIXED_PT_ANG)
+  #warning "FLOAT_PT_ANG, FIXED_PT_ANG - Both can be defined for debug purpose only."
+#endif
+#ifdef FIXED_PT_ANG
+//#define FLOAT_PT_ANG_CURR /* Uncomment this when Phase calculation by floating point datatypes for current*/
+#endif
+//#define DO_NOT_MODBUS_HANG_CORRECTION
+//#define FREQ_CALC_EVERY_SAMPLE /* Uncomment to calculate every sample and for every phase*/
+#define WATCHDOG_RESET_AT_MULTIPLE_TASK /* Uncomment this to enable watchdog implementation as per old method (reset at every task)*/
+#ifndef WATCHDOG_RESET_AT_MULTIPLE_TASK 
+//#define WATCHDOG_COUNTER_DEBUG /* Uncomment to enable watchdog debug*/
+#endif
+//#define ANG_AVG_SUM_METHOD /* Uncomment this when angle average is by sum method Otherwise angle average will be calculated by difference method*/
+//#define NO_HYST_FOR_PICKUP  /* Uncomment to disable hysteresis for pick up*/
+//#define NO_CIRCULAR_BUFFER_FOR_FREQ  /*Uncomment to remove circular buffer implementation for frequency samples. If uncommented samples will be shifted.*/ //Task 60760
+
+
+#define ENABLE_BI_ON_DISCRETE_INPUT /* commenting will only remove modbus side implementation, feature will be avaliable on HMI */
+//#define READ_SERIAL_NUMBER
+#define BATTERYLESS_FCM
+
+//#define ADC_DEBUGLOG
+#define BI_MAPPED_TO_BO1
+
+/**
+ * @brief INCLUDES
+ */
+#include  <stdarg.h>
+#include  <stdio.h>
+#include  <stdlib.h>
+#include  <math.h>
+
+/**
+ * @brief UCOS III
+ */
+#include  <os.h>
+#include  <cpu.h>
+#include  <lib_def.h>
+#include  <lib_ascii.h>
+#include  <lib_math.h>
+#include  <lib_mem.h>
+#include  <lib_str.h>   
+#include  <app_cfg.h>
+
+/**
+ * @brief MAIN HEADER
+ */
+#include "SSBMain.h"
+#include "Versions.h"
+
+/**
+ * @brief Power Manager Module
+ */
+#include "Control.h"
+
+/**
+ * @brief TIME Module
+ */
+#include "Clock.h"
+
+#include "DFT_Vectors.h"
+#include "DFT_Main.h"
+#include "Measurement.h"
+#include "Frequency.h"
+#include "DFT_Struct.h"
+#include "sampling.h"
+#include "AppADC.h"
+#include "ads131.h"
+typedef unsigned char           bool; //@Tipu
+
+/**
+ * @breif Driver Modules
+ */
+#include "RelaysDriver.h"
+#include "LcdDrv.h"
+#include "LedDriver.h"
+#include "FlashDriver.h"
+
+/**
+ * @brief HMI Module includes
+ */
+#ifndef ACTIVE_FONT
+/*!
+ @def 		ACTIVE_FONT
+ @brief	Ascii font selection 10X6
+ */
+#define ACTIVE_FONT 106
+#endif
+
+#include "HMI_Menu.h"
+#include "HMI_Menu_Enum.h"
+#include "HMI_Fonts.h"
+#include "HMI_FontHeader.h"
+#include "HMI_LCDControl.h"
+#include "HMI_Task.h"
+#include "HMI_HomeScreens.h"
+#include "HMI_ViewParamNum.h"
+#include "HMI_EditParamNum.h"
+#include "HMI_ViewParamStr.h"
+#include "HMI_EditParamStr.h"
+#include "HMI_ShowEvents.h"
+#include "HMI_ShowTrailPtr.h"
+#include "HMI_Screens.h"
+#include "HMI_SelfTest.h"
+#include "HMI_Navigation.h"
+#include "HMI_MenuStrings_EN.h"
+#include "HMI_MenuStrings_DE.h"
+#include "HMI_MenuStrings_ES.h"
+#include "HMI_MenuStrings_PT.h"
+#include "HMI_MenuStrings_FR.h"
+#include "HMI_LanguageTable.h"
+
+/**
+ * @brief Communication Module
+ */
+#include "ModbusDiagnostic.h"
+#include "ModbusMap.h"
+#include "ModbusLowLevel.h"
+#include "ModbusTask.h"
+#include "Modbus_USB_Task.h"
+#include "Modbus_FC01.h"
+#include "Modbus_FC02.h"
+#include "Modbus_FC03.h"
+#include "Modbus_FC04.h"
+#include "Modbus_FC05.h"
+#include "Modbus_FC06.h"
+#include "Modbus_FC15.h"
+#include "Modbus_FC16.h"
+#include "ModbusTestValues.h"
+
+
+#include "stm32h7xx_hal.h"
+/**
+ * @brief Protection Module
+ */
+#include "IEC_50.h"
+
+#include "TripLogic.h"
+#include "VoltageProtection.h"
+#include "CurrentProtection.h"
+#include "../Protection/ApplicationLIP/TransientDetection/TransientDetection.h"
+
+/**
+ * @brief Pulse Detection Module
+ */
+#include "PulseDetection.h"
+
+/**
+ * Trip Event handler
+ */
+//#include "EventHandler.h"
+#include "../Records/Events/EventHandler.h"
+#include "../Records/Events/Trip_Logic.h"
+#include "../Records/Events/TripReset.h"
+
+/**
+ * Monitor Task handler
+ */
+#include "MonitorTask.h"
+
+
+/**
+ * @brief DSP Module
+ */
+/*!
+ @def 		DEF_DFT_POINTS
+ @brief	Number of DFT points
+ */
+
+//#define DEF_DFT_POINTS                                           32
+
+/*!
+ @def 		DEF_FFT_POINTS
+ @brief	Number of FFT points
+ */
+#define DEF_FFT_POINTS                                          256
+
+/**
+ * @brief Parameterization Module
+ */
+#include "ParameterLimits.h"
+#include "ParameterHandler.h"
+/**
+ * @brief Calibration Module
+ */
+#include "Calibration.h"
+
+/**
+ * @brief Phase sequence supervision
+ */
+#include "PhaseSequence.h"
+
+/**
+ * Trailing Pointer handler
+ */
+#include "TrailsHandler.h"
+
+/**
+ * Measurement Task
+ */
+#include "MeasurementTask.h"
+
+
+#define CALCULATE_CRC
+#ifdef CALCULATE_CRC
+    extern CPU_INT16U Calculate_Parameter_CRC16(CPU_INT08U *crc_buf, CPU_INT16U crc_len);
+#endif
+//#define FLASH_REDUNDANCY
+#ifdef FLASH_REDUNDANCY
+    #define LIVE_FLASH_SECTOR       0xAAAA
+    #define WORKING_FLASH_SECTOR    0xBBBB
+extern CPU_INT08U Write_Flash_Redundancy(void);
+    #define FCM_PARAMETER_CRC_CALC_SIZE (sizeof(FCM_Parameters) - 2) /* subtracte two bytes as CRC is of 2 bytes which is not to be included in CRC computation */
+#endif    
+
+/* This also include WDOGCounter (4 bytes) , Battery Depassivation Fail flag (1 Byte) and  pad byte (1) */
+#define FAULT_RESET_DATA_SIZE 12 
+
+
+extern CPU_INT08U gfaultReset[FAULT_RESET_DATA_SIZE];/* this array is used to write data to flash address MEMORY_ADDRESS_PFLASH_FAULT_RESET_SIGN */
+/**
+ * @brief Other global structures/ variables
+ */
+extern CPU_INT08U TempValueADC1;
+extern CPU_INT08U ADC1ChannelArray[3];
+void DRV_Reset(void);
+
+//#define DYNAMIC_CF  /* MACRO TO ennable the Dynamic correction factor Implementation */
+//#define DYNAMIC_CF_MAGNITUDE_PHASE_CONSTANT   0xFFE2         //(CPU_INT16S) -30
+//#define DYNAMIC_CF_ANGLE_PHASE_CONSTANT       0xC568         //(CPU_INT32S) -15000
+//#define DYNAMIC_CF_MAGNITUDE_EARTH_CONSTANT   0xFFFE         //(CPU_INT16S) -2
+//#define DYNAMIC_CF_ANGLE_EARTH_CONSTANT       0xF448         //(CPU_INT32S) -3000
+//#define DISABLE_DCF_IE_THRESHOLD_VAL_LOWER_LIM 500            /* Minimum value of Earth Current */
+
+#define ROUNDUP_3 /* enable this macro to round up the DCF value to 3 digits only */
+
+
+#define DISABLED 0  /* MACRO to check whether the Correction factor is Disabled or not */
+#define STATIC 1    /* MACRO to check whether the Correction factor is Static */
+#define SECS_5MS_MULTIPLIER                      10    /* multiplier to get number of seconds using 5 ms timer */
+//#define OPEN_PHASE_TESTING_CODE_ENABLE   /* enable this macro to operate BOA for Open Phase Detection... This is for only testing purpose and should be disabled/commented for release */
+
+
+#define GND_SENSOR_CALIBRATION                                                   /* This should be always active for finding ADC sensitivity max value at production  */
+extern uint8_t WDI_ExtFeed(void);
+extern uint8_t WDI_ExtInit(void);
+
+
+/* State Machine for Modbus Processing */
+#define RECEIVING       0
+#define RECEIVING_DONE  1
+#define TRANSMITING     2
+#define DEFAULT_PFO_CHECK_COUNT                   5   
+#define PFO_CHECK_COUNT_UPPER_LIMIT             10
+#define PFO_CHECK_COUNT_LOWER_LIMIT             0
+#define EXTERNAL_WATCHDOG  /* This macro is not to be disabled until the New TPS3606 U3 used for Reset the device in case of battery under 3 v */
+#define DBG_OS_CPU_USAGE /* Uncomment this when OS Statistics is required , When uncommenting this please set micro OS_CFG_TASK_PROFILE_EN to 1 in os_cfg.h #define OS_CFG_TASK_PROFILE_EN  1 */
+#define MODBUS_INTER_CHAR_CHECK  // comment this if inter character check for modbus is to be removed 
+
+//#define MOSBUS_UART_DEBUG_RP /* Uncomment this to include various counters to debug UART/message Q and modbus */
+
+#ifdef MOSBUS_UART_DEBUG_RP
+/* one variable to identify all modbus related error */
+enum MODBUS_LL_ERR_ID
+{
+  MOD_MSGQ_FULL = 0,
+  MOD_UART_ISR_OR,
+  MOD_UART_ISR_FE,
+  MOD_UART_POLL_OR,
+  MOD_UART_FRAME,
+  MOD_UART_STK_TX,
+  MOD_MSGQ_TD_ERR,
+  MOD_MSGQ_ISR_ERR,
+  MOD_MSGQ_PEND_ERR,
+  MOD_TX_HANG_ERR,
+  MOD_ERR_FLAG_MAX,
+};
+
+/* keeps track of erro count on modbusErr index*/
+extern CPU_INT08U modbusErr_cnt[];
+#endif //MOSBUS_UART_DEBUG_RP
+
+
+#define BI_01_PICK_DROP_TIME 
+/**
+ * INCLUDES ENDS
+ */
+#endif                                                                          /* INCLUDES_H_                                */
+
+#define TRANSIENT_ENABLED /*when defined, transient will be enabled!*/
+//! Close the doxygen group for Main
+//! @}

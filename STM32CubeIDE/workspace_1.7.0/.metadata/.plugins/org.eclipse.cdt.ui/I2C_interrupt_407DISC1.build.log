@@ -1,0 +1,10 @@
+17:04:45 **** Build of configuration Debug for project I2C_interrupt_407DISC1 ****
+make -j12 all 
+arm-none-eabi-size   I2C_interrupt_407DISC1.elf 
+   text	   data	    bss	    dec	    hex	filename
+  20720	    120	   1824	  22664	   5888	I2C_interrupt_407DISC1.elf
+Finished building: default.size.stdout
+ 
+
+17:04:45 Build Finished. 0 errors, 0 warnings. (took 470ms)
+
