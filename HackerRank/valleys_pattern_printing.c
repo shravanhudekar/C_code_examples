@@ -15,39 +15,43 @@ char* rtrim(char*);
 
 int parse_int(char*);
 
-/*
- * Complete the 'countingValleys' function below.
- *
- * if its up k-- if down k++.
- * increment valley count when k=0 i.e on sea level.
- * so no. of time sea level is reached between start and end is no. of valleys.
- * NOTE: increment count only when step is up and not down to make sure its not moutain climb and climbing down. where also k = 0;
- */
-
 int countingValleys(int steps, char* path) 
 {
-    int k=0,i,count=0;
-  
-        for(i=0;i<steps;i++)
-        {
-            // if(( path[i]=='U') && (k == -1))
-            // {
-            //     count++;
-            // }
-            if( path[i]=='U'){ k++; }
-            
-            else if(path[i]=='D')
-            {
-                k--;   
-            }
-             if(path[i]=='U' && k == 0)         // refer NOTE
-            {
-                count++;
-            }
-          
-        }
+    int k=0,i,j,step=1,count=0,flag;
+   printf("_");
 
-    return count;
+    for(j=0;j<=step;j++)
+    {   k=0;
+        for(i=0;i<=steps;i++)
+        {
+           
+            if( i>0 && (path[i]=='U') && (path[i-1]=='U')){ k--; }
+            
+            else if( ((path[i]=='D') && (path[i-1]=='D')) ||
+            (((path[i]=='D') && (i==0))) )
+            {
+                k++;   
+               
+                if(k>step)
+                { 
+                    step=k;
+                }
+            }
+            
+            if(j == k)
+            {
+                if(path[i]== 'U') { printf("/"); }
+                else if(path[i]== 'D') { printf("\\"); }
+            }
+            else { printf(" ");}
+
+       }
+
+       if(j==0) { printf("_\n "); }
+       else { printf("\n ");}
+}
+   return ((count/(step+1))-1);
+    return 0;
 }
 
 int main()
