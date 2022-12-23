@@ -1,0 +1,20 @@
+16:38:40 **** Incremental Build of configuration Debug for project SPI_OLED_407 ****
+make -j12 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -c -I../Core/Inc -I"D:/My Git/C_code_examples/STM32CubeIDE/workspace_1.7.0/SPI_OLED_407/Core/ssd1306" -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+arm-none-eabi-g++ -o "SPI_OLED_407.elf" @"objects.list"   -mcpu=cortex-m4 -T"D:\My Git\C_code_examples\STM32CubeIDE\workspace_1.7.0\SPI_OLED_407\STM32F407VGTX_FLASH.ld" -Wl,-Map="SPI_OLED_407.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -lstdc++ -lsupc++ -Wl,--end-group
+Finished building target: SPI_OLED_407.elf
+ 
+arm-none-eabi-size   SPI_OLED_407.elf 
+arm-none-eabi-objdump -h -S  SPI_OLED_407.elf  > "SPI_OLED_407.list"
+arm-none-eabi-objcopy  -O binary  SPI_OLED_407.elf  "SPI_OLED_407.bin"
+   text	   data	    bss	    dec	    hex	filename
+  19004	    128	   2792	  21924	   55a4	SPI_OLED_407.elf
+Finished building: default.size.stdout
+ 
+Finished building: SPI_OLED_407.bin
+ 
+Finished building: SPI_OLED_407.list
+ 
+
+16:38:41 Build Finished. 0 errors, 0 warnings. (took 1s.149ms)
+

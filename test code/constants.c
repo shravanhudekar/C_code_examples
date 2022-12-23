@@ -4,8 +4,10 @@ int main()
 {
     
     const int x=3;    // int const x; both are same
-    //const  int  *y=10;  //data is Read-only
-    int const *y=10;
+    int z=10;
+    //const  int  *y=10; 
+    int const *y=&z;        //data is Read-only
+    z=10;
     int * const p=15; // pointer is read only varable data can be changed
    
     int  const const k ;  // both are read only

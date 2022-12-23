@@ -1,430 +1,58 @@
-16:55:43 **** Incremental Build of configuration Debug for project SPI_407 ****
+16:37:11 **** Incremental Build of configuration Debug for project SPI_OLED_407 ****
 make -j12 all 
-arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
-arm-none-eabi-gcc -o "SPI_407.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\incads1917\STM32CubeIDE\workspace_1.7.0\SPI_407\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="SPI_407.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
-Finished building target: SPI_407.elf
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -c -I../Core/Inc -I"D:/My Git/C_code_examples/STM32CubeIDE/workspace_1.7.0/SPI_OLED_407/Core/ssd1306" -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+arm-none-eabi-g++ -o "SPI_OLED_407.elf" @"objects.list"   -mcpu=cortex-m4 -T"D:\My Git\C_code_examples\STM32CubeIDE\workspace_1.7.0\SPI_OLED_407\STM32F407VGTX_FLASH.ld" -Wl,-Map="SPI_OLED_407.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -lstdc++ -lsupc++ -Wl,--end-group
+Finished building target: SPI_OLED_407.elf
  
-arm-none-eabi-size   SPI_407.elf 
-arm-none-eabi-objdump -h -S  SPI_407.elf  > "SPI_407.list"
-arm-none-eabi-objcopy  -O binary  SPI_407.elf  "SPI_407.bin"
+arm-none-eabi-size   SPI_OLED_407.elf 
+arm-none-eabi-objdump -h -S  SPI_OLED_407.elf  > "SPI_OLED_407.list"
+arm-none-eabi-objcopy  -O binary  SPI_OLED_407.elf  "SPI_OLED_407.bin"
    text	   data	    bss	    dec	    hex	filename
-  21596	    120	   2104	  23820	   5d0c	SPI_407.elf
+   9492	     20	   1740	  11252	   2bf4	SPI_OLED_407.elf
 Finished building: default.size.stdout
  
-Finished building: SPI_407.bin
+Finished building: SPI_OLED_407.bin
  
-Finished building: SPI_407.list
+Finished building: SPI_OLED_407.list
  
-16:56:04 **** Incremental Build of configuration Debug for project SPI_407 ****
+16:37:18 **** Incremental Build of configuration Debug for project SPI_OLED_407 ****
 make -j12 all 
-arm-none-eabi-size   SPI_407.elf 
+arm-none-eabi-size   SPI_OLED_407.elf 
    text	   data	    bss	    dec	    hex	filename
-  21596	    120	   2104	  23820	   5d0c	SPI_407.elf
+   9492	     20	   1740	  11252	   2bf4	SPI_OLED_407.elf
 Finished building: default.size.stdout
  
-16:57:33 **** Incremental Build of configuration Debug for project SPI_407 ****
+16:38:18 **** Incremental Build of configuration Debug for project SPI_OLED_407 ****
 make -j12 all 
-arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
-arm-none-eabi-gcc -o "SPI_407.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\incads1917\STM32CubeIDE\workspace_1.7.0\SPI_407\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="SPI_407.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
-Finished building target: SPI_407.elf
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -c -I../Core/Inc -I"D:/My Git/C_code_examples/STM32CubeIDE/workspace_1.7.0/SPI_OLED_407/Core/ssd1306" -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+arm-none-eabi-g++ -o "SPI_OLED_407.elf" @"objects.list"   -mcpu=cortex-m4 -T"D:\My Git\C_code_examples\STM32CubeIDE\workspace_1.7.0\SPI_OLED_407\STM32F407VGTX_FLASH.ld" -Wl,-Map="SPI_OLED_407.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -lstdc++ -lsupc++ -Wl,--end-group
+Finished building target: SPI_OLED_407.elf
  
-arm-none-eabi-size   SPI_407.elf 
-arm-none-eabi-objdump -h -S  SPI_407.elf  > "SPI_407.list"
-arm-none-eabi-objcopy  -O binary  SPI_407.elf  "SPI_407.bin"
+arm-none-eabi-size   SPI_OLED_407.elf 
+arm-none-eabi-objdump -h -S  SPI_OLED_407.elf  > "SPI_OLED_407.list"
+arm-none-eabi-objcopy  -O binary  SPI_OLED_407.elf  "SPI_OLED_407.bin"
    text	   data	    bss	    dec	    hex	filename
-  21596	    120	   2104	  23820	   5d0c	SPI_407.elf
+   9504	     20	   1740	  11264	   2c00	SPI_OLED_407.elf
 Finished building: default.size.stdout
  
-Finished building: SPI_407.bin
+Finished building: SPI_OLED_407.bin
  
-Finished building: SPI_407.list
+Finished building: SPI_OLED_407.list
  
-17:00:58 **** Incremental Build of configuration Debug for project SPI_407 ****
+16:38:40 **** Incremental Build of configuration Debug for project SPI_OLED_407 ****
 make -j12 all 
-arm-none-eabi-size   SPI_407.elf 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -c -I../Core/Inc -I"D:/My Git/C_code_examples/STM32CubeIDE/workspace_1.7.0/SPI_OLED_407/Core/ssd1306" -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+arm-none-eabi-g++ -o "SPI_OLED_407.elf" @"objects.list"   -mcpu=cortex-m4 -T"D:\My Git\C_code_examples\STM32CubeIDE\workspace_1.7.0\SPI_OLED_407\STM32F407VGTX_FLASH.ld" -Wl,-Map="SPI_OLED_407.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -lstdc++ -lsupc++ -Wl,--end-group
+Finished building target: SPI_OLED_407.elf
+ 
+arm-none-eabi-size   SPI_OLED_407.elf 
+arm-none-eabi-objdump -h -S  SPI_OLED_407.elf  > "SPI_OLED_407.list"
+arm-none-eabi-objcopy  -O binary  SPI_OLED_407.elf  "SPI_OLED_407.bin"
    text	   data	    bss	    dec	    hex	filename
-  21596	    120	   2104	  23820	   5d0c	SPI_407.elf
+  19004	    128	   2792	  21924	   55a4	SPI_OLED_407.elf
 Finished building: default.size.stdout
  
-17:02:29 **** Incremental Build of configuration Debug for project SPI_407 ****
-make -j12 all 
-arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
-arm-none-eabi-gcc -o "SPI_407.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\incads1917\STM32CubeIDE\workspace_1.7.0\SPI_407\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="SPI_407.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
-Finished building target: SPI_407.elf
+Finished building: SPI_OLED_407.bin
  
-arm-none-eabi-size   SPI_407.elf 
-arm-none-eabi-objdump -h -S  SPI_407.elf  > "SPI_407.list"
-   text	   data	    bss	    dec	    hex	filename
-  21596	    120	   2104	  23820	   5d0c	SPI_407.elf
-arm-none-eabi-objcopy  -O binary  SPI_407.elf  "SPI_407.bin"
-Finished building: default.size.stdout
- 
-Finished building: SPI_407.bin
- 
-Finished building: SPI_407.list
- 
-17:18:49 **** Incremental Build of configuration Debug for project SPI_407 ****
-make -j12 all 
-arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
-arm-none-eabi-gcc -o "SPI_407.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\incads1917\STM32CubeIDE\workspace_1.7.0\SPI_407\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="SPI_407.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
-Finished building target: SPI_407.elf
- 
-arm-none-eabi-size   SPI_407.elf 
-arm-none-eabi-objdump -h -S  SPI_407.elf  > "SPI_407.list"
-arm-none-eabi-objcopy  -O binary  SPI_407.elf  "SPI_407.bin"
-   text	   data	    bss	    dec	    hex	filename
-  21596	    120	   2104	  23820	   5d0c	SPI_407.elf
-Finished building: default.size.stdout
- 
-Finished building: SPI_407.bin
- 
-Finished building: SPI_407.list
- 
-17:19:16 **** Incremental Build of configuration Debug for project SPI_407 ****
-make -j12 all 
-arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
-arm-none-eabi-gcc -o "SPI_407.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\incads1917\STM32CubeIDE\workspace_1.7.0\SPI_407\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="SPI_407.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
-Finished building target: SPI_407.elf
- 
-arm-none-eabi-size   SPI_407.elf 
-arm-none-eabi-objdump -h -S  SPI_407.elf  > "SPI_407.list"
-arm-none-eabi-objcopy  -O binary  SPI_407.elf  "SPI_407.bin"
-   text	   data	    bss	    dec	    hex	filename
-  21596	    120	   2104	  23820	   5d0c	SPI_407.elf
-Finished building: default.size.stdout
- 
-Finished building: SPI_407.bin
- 
-Finished building: SPI_407.list
- 
-17:21:34 **** Incremental Build of configuration Debug for project SPI_407 ****
-make -j12 all 
-arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
-arm-none-eabi-gcc -o "SPI_407.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\incads1917\STM32CubeIDE\workspace_1.7.0\SPI_407\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="SPI_407.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
-Finished building target: SPI_407.elf
- 
-arm-none-eabi-size   SPI_407.elf 
-arm-none-eabi-objdump -h -S  SPI_407.elf  > "SPI_407.list"
-arm-none-eabi-objcopy  -O binary  SPI_407.elf  "SPI_407.bin"
-   text	   data	    bss	    dec	    hex	filename
-  21596	    120	   2104	  23820	   5d0c	SPI_407.elf
-Finished building: default.size.stdout
- 
-Finished building: SPI_407.bin
- 
-Finished building: SPI_407.list
- 
-17:22:09 **** Incremental Build of configuration Debug for project SPI_407 ****
-make -j12 all 
-arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
-arm-none-eabi-gcc -o "SPI_407.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\incads1917\STM32CubeIDE\workspace_1.7.0\SPI_407\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="SPI_407.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
-Finished building target: SPI_407.elf
- 
-arm-none-eabi-size   SPI_407.elf 
-arm-none-eabi-objdump -h -S  SPI_407.elf  > "SPI_407.list"
-arm-none-eabi-objcopy  -O binary  SPI_407.elf  "SPI_407.bin"
-   text	   data	    bss	    dec	    hex	filename
-  21596	    120	   2104	  23820	   5d0c	SPI_407.elf
-Finished building: default.size.stdout
- 
-Finished building: SPI_407.bin
- 
-Finished building: SPI_407.list
- 
-17:22:43 **** Incremental Build of configuration Debug for project SPI_407 ****
-make -j12 all 
-arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
-arm-none-eabi-gcc -o "SPI_407.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\incads1917\STM32CubeIDE\workspace_1.7.0\SPI_407\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="SPI_407.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
-Finished building target: SPI_407.elf
- 
-arm-none-eabi-size   SPI_407.elf 
-arm-none-eabi-objdump -h -S  SPI_407.elf  > "SPI_407.list"
-arm-none-eabi-objcopy  -O binary  SPI_407.elf  "SPI_407.bin"
-   text	   data	    bss	    dec	    hex	filename
-  21596	    120	   2104	  23820	   5d0c	SPI_407.elf
-Finished building: default.size.stdout
- 
-Finished building: SPI_407.bin
- 
-Finished building: SPI_407.list
- 
-17:23:37 **** Incremental Build of configuration Debug for project SPI_407 ****
-make -j12 all 
-arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
-arm-none-eabi-gcc -o "SPI_407.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\incads1917\STM32CubeIDE\workspace_1.7.0\SPI_407\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="SPI_407.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
-Finished building target: SPI_407.elf
- 
-arm-none-eabi-size   SPI_407.elf 
-arm-none-eabi-objdump -h -S  SPI_407.elf  > "SPI_407.list"
-arm-none-eabi-objcopy  -O binary  SPI_407.elf  "SPI_407.bin"
-   text	   data	    bss	    dec	    hex	filename
-  21596	    120	   2104	  23820	   5d0c	SPI_407.elf
-Finished building: default.size.stdout
- 
-Finished building: SPI_407.bin
- 
-Finished building: SPI_407.list
- 
-08:20:36 **** Incremental Build of configuration Debug for project SPI_407 ****
-make -j12 all 
-arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
-arm-none-eabi-gcc -o "SPI_407.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\incads1917\STM32CubeIDE\workspace_1.7.0\SPI_407\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="SPI_407.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
-Finished building target: SPI_407.elf
- 
-arm-none-eabi-size   SPI_407.elf 
-arm-none-eabi-objdump -h -S  SPI_407.elf  > "SPI_407.list"
-arm-none-eabi-objcopy  -O binary  SPI_407.elf  "SPI_407.bin"
-   text	   data	    bss	    dec	    hex	filename
-  21596	    120	   2104	  23820	   5d0c	SPI_407.elf
-Finished building: default.size.stdout
- 
-Finished building: SPI_407.bin
- 
-Finished building: SPI_407.list
- 
-08:22:12 **** Incremental Build of configuration Debug for project SPI_407 ****
-make -j12 all 
-arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
-arm-none-eabi-gcc -o "SPI_407.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\incads1917\STM32CubeIDE\workspace_1.7.0\SPI_407\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="SPI_407.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
-Finished building target: SPI_407.elf
- 
-arm-none-eabi-size   SPI_407.elf 
-arm-none-eabi-objdump -h -S  SPI_407.elf  > "SPI_407.list"
-arm-none-eabi-objcopy  -O binary  SPI_407.elf  "SPI_407.bin"
-   text	   data	    bss	    dec	    hex	filename
-  21596	    120	   2104	  23820	   5d0c	SPI_407.elf
-Finished building: default.size.stdout
- 
-Finished building: SPI_407.bin
- 
-Finished building: SPI_407.list
- 
-08:22:30 **** Incremental Build of configuration Debug for project SPI_407 ****
-make -j12 all 
-arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
-arm-none-eabi-gcc -o "SPI_407.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\incads1917\STM32CubeIDE\workspace_1.7.0\SPI_407\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="SPI_407.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
-Finished building target: SPI_407.elf
- 
-arm-none-eabi-size   SPI_407.elf 
-arm-none-eabi-objdump -h -S  SPI_407.elf  > "SPI_407.list"
-arm-none-eabi-objcopy  -O binary  SPI_407.elf  "SPI_407.bin"
-   text	   data	    bss	    dec	    hex	filename
-  21596	    120	   2104	  23820	   5d0c	SPI_407.elf
-Finished building: default.size.stdout
- 
-Finished building: SPI_407.bin
- 
-Finished building: SPI_407.list
- 
-08:22:52 **** Incremental Build of configuration Debug for project SPI_407 ****
-make -j12 all 
-arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
-arm-none-eabi-gcc -o "SPI_407.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\incads1917\STM32CubeIDE\workspace_1.7.0\SPI_407\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="SPI_407.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
-Finished building target: SPI_407.elf
- 
-arm-none-eabi-size   SPI_407.elf 
-arm-none-eabi-objdump -h -S  SPI_407.elf  > "SPI_407.list"
-arm-none-eabi-objcopy  -O binary  SPI_407.elf  "SPI_407.bin"
-   text	   data	    bss	    dec	    hex	filename
-  21596	    120	   2104	  23820	   5d0c	SPI_407.elf
-Finished building: default.size.stdout
- 
-Finished building: SPI_407.bin
- 
-Finished building: SPI_407.list
- 
-08:23:19 **** Incremental Build of configuration Debug for project SPI_407 ****
-make -j12 all 
-arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
-arm-none-eabi-gcc -o "SPI_407.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\incads1917\STM32CubeIDE\workspace_1.7.0\SPI_407\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="SPI_407.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
-Finished building target: SPI_407.elf
- 
-arm-none-eabi-size   SPI_407.elf 
-arm-none-eabi-objdump -h -S  SPI_407.elf  > "SPI_407.list"
-arm-none-eabi-objcopy  -O binary  SPI_407.elf  "SPI_407.bin"
-   text	   data	    bss	    dec	    hex	filename
-  21584	    120	   2104	  23808	   5d00	SPI_407.elf
-Finished building: default.size.stdout
- 
-Finished building: SPI_407.bin
- 
-Finished building: SPI_407.list
- 
-08:24:44 **** Incremental Build of configuration Debug for project SPI_407 ****
-make -j12 all 
-arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
-arm-none-eabi-gcc -o "SPI_407.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\incads1917\STM32CubeIDE\workspace_1.7.0\SPI_407\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="SPI_407.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
-Finished building target: SPI_407.elf
- 
-arm-none-eabi-size   SPI_407.elf 
-arm-none-eabi-objdump -h -S  SPI_407.elf  > "SPI_407.list"
-arm-none-eabi-objcopy  -O binary  SPI_407.elf  "SPI_407.bin"
-   text	   data	    bss	    dec	    hex	filename
-  21584	    120	   2104	  23808	   5d00	SPI_407.elf
-Finished building: default.size.stdout
- 
-Finished building: SPI_407.bin
- 
-Finished building: SPI_407.list
- 
-08:27:06 **** Incremental Build of configuration Debug for project SPI_407 ****
-make -j12 all 
-arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
-arm-none-eabi-gcc -o "SPI_407.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\incads1917\STM32CubeIDE\workspace_1.7.0\SPI_407\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="SPI_407.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
-Finished building target: SPI_407.elf
- 
-arm-none-eabi-size   SPI_407.elf 
-arm-none-eabi-objdump -h -S  SPI_407.elf  > "SPI_407.list"
-arm-none-eabi-objcopy  -O binary  SPI_407.elf  "SPI_407.bin"
-   text	   data	    bss	    dec	    hex	filename
-  21584	    120	   2104	  23808	   5d00	SPI_407.elf
-Finished building: default.size.stdout
- 
-Finished building: SPI_407.bin
- 
-Finished building: SPI_407.list
- 
-08:28:41 **** Incremental Build of configuration Debug for project SPI_407 ****
-make -j12 all 
-arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
-arm-none-eabi-gcc -o "SPI_407.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\incads1917\STM32CubeIDE\workspace_1.7.0\SPI_407\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="SPI_407.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
-Finished building target: SPI_407.elf
- 
-arm-none-eabi-size   SPI_407.elf 
-arm-none-eabi-objdump -h -S  SPI_407.elf  > "SPI_407.list"
-arm-none-eabi-objcopy  -O binary  SPI_407.elf  "SPI_407.bin"
-   text	   data	    bss	    dec	    hex	filename
-  21584	    120	   2104	  23808	   5d00	SPI_407.elf
-Finished building: default.size.stdout
- 
-Finished building: SPI_407.bin
- 
-Finished building: SPI_407.list
- 
-08:29:07 **** Incremental Build of configuration Debug for project SPI_407 ****
-make -j12 all 
-arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
-arm-none-eabi-gcc -o "SPI_407.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\incads1917\STM32CubeIDE\workspace_1.7.0\SPI_407\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="SPI_407.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
-Finished building target: SPI_407.elf
- 
-arm-none-eabi-size   SPI_407.elf 
-arm-none-eabi-objdump -h -S  SPI_407.elf  > "SPI_407.list"
-arm-none-eabi-objcopy  -O binary  SPI_407.elf  "SPI_407.bin"
-   text	   data	    bss	    dec	    hex	filename
-  21584	    120	   2104	  23808	   5d00	SPI_407.elf
-Finished building: default.size.stdout
- 
-Finished building: SPI_407.bin
- 
-Finished building: SPI_407.list
- 
-08:30:36 **** Incremental Build of configuration Debug for project SPI_407 ****
-make -j12 all 
-arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
-arm-none-eabi-gcc -o "SPI_407.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\incads1917\STM32CubeIDE\workspace_1.7.0\SPI_407\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="SPI_407.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
-Finished building target: SPI_407.elf
- 
-arm-none-eabi-size   SPI_407.elf 
-arm-none-eabi-objdump -h -S  SPI_407.elf  > "SPI_407.list"
-arm-none-eabi-objcopy  -O binary  SPI_407.elf  "SPI_407.bin"
-   text	   data	    bss	    dec	    hex	filename
-  21584	    120	   2104	  23808	   5d00	SPI_407.elf
-Finished building: default.size.stdout
- 
-Finished building: SPI_407.bin
- 
-Finished building: SPI_407.list
- 
-08:32:18 **** Incremental Build of configuration Debug for project SPI_407 ****
-make -j12 all 
-arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
-arm-none-eabi-gcc -o "SPI_407.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\incads1917\STM32CubeIDE\workspace_1.7.0\SPI_407\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="SPI_407.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
-Finished building target: SPI_407.elf
- 
-arm-none-eabi-size   SPI_407.elf 
-arm-none-eabi-objdump -h -S  SPI_407.elf  > "SPI_407.list"
-arm-none-eabi-objcopy  -O binary  SPI_407.elf  "SPI_407.bin"
-   text	   data	    bss	    dec	    hex	filename
-  21584	    120	   2104	  23808	   5d00	SPI_407.elf
-Finished building: default.size.stdout
- 
-Finished building: SPI_407.bin
- 
-Finished building: SPI_407.list
- 
-08:32:46 **** Incremental Build of configuration Debug for project SPI_407 ****
-make -j12 all 
-arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
-../Core/Src/main.c: In function 'receive_sensor':
-../Core/Src/main.c:392:13: error: expected expression before '|' token
-  392 |  Tx_buff[2]=|0x80;; //to set MSB bit to high read mode
-      |             ^
-make: *** [Core/Src/subdir.mk:37: Core/Src/main.o] Error 1
-"make -j12 all" terminated with exit code 2. Build might be incomplete.
-08:32:52 **** Incremental Build of configuration Debug for project SPI_407 ****
-make -j12 all 
-arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
-../Core/Src/main.c: In function 'receive_sensor':
-../Core/Src/main.c:392:13: error: expected expression before '|' token
-  392 |  Tx_buff[2]=|0x80; //to set MSB bit to high read mode
-      |             ^
-make: *** [Core/Src/subdir.mk:37: Core/Src/main.o] Error 1
-"make -j12 all" terminated with exit code 2. Build might be incomplete.
-08:33:02 **** Incremental Build of configuration Debug for project SPI_407 ****
-make -j12 all 
-arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
-arm-none-eabi-gcc -o "SPI_407.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\incads1917\STM32CubeIDE\workspace_1.7.0\SPI_407\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="SPI_407.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
-Finished building target: SPI_407.elf
- 
-arm-none-eabi-size   SPI_407.elf 
-arm-none-eabi-objdump -h -S  SPI_407.elf  > "SPI_407.list"
-arm-none-eabi-objcopy  -O binary  SPI_407.elf  "SPI_407.bin"
-   text	   data	    bss	    dec	    hex	filename
-  21596	    120	   2104	  23820	   5d0c	SPI_407.elf
-Finished building: default.size.stdout
- 
-Finished building: SPI_407.bin
- 
-Finished building: SPI_407.list
- 
-08:33:16 **** Incremental Build of configuration Debug for project SPI_407 ****
-make -j12 all 
-arm-none-eabi-size   SPI_407.elf 
-   text	   data	    bss	    dec	    hex	filename
-  21596	    120	   2104	  23820	   5d0c	SPI_407.elf
-Finished building: default.size.stdout
- 
-08:46:35 **** Incremental Build of configuration Debug for project SPI_407 ****
-make -j12 all 
-arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
-arm-none-eabi-gcc -o "SPI_407.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\incads1917\STM32CubeIDE\workspace_1.7.0\SPI_407\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="SPI_407.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
-Finished building target: SPI_407.elf
- 
-arm-none-eabi-size   SPI_407.elf 
-arm-none-eabi-objdump -h -S  SPI_407.elf  > "SPI_407.list"
-arm-none-eabi-objcopy  -O binary  SPI_407.elf  "SPI_407.bin"
-   text	   data	    bss	    dec	    hex	filename
-  21584	    120	   2104	  23808	   5d00	SPI_407.elf
-Finished building: default.size.stdout
- 
-Finished building: SPI_407.bin
- 
-Finished building: SPI_407.list
- 
-08:58:21 **** Incremental Build of configuration Debug for project SPI_407 ****
-make -j12 all 
-arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
-arm-none-eabi-gcc -o "SPI_407.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\incads1917\STM32CubeIDE\workspace_1.7.0\SPI_407\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="SPI_407.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
-Finished building target: SPI_407.elf
- 
-arm-none-eabi-size   SPI_407.elf 
-arm-none-eabi-objdump -h -S  SPI_407.elf  > "SPI_407.list"
-arm-none-eabi-objcopy  -O binary  SPI_407.elf  "SPI_407.bin"
-   text	   data	    bss	    dec	    hex	filename
-  21576	    120	   2104	  23800	   5cf8	SPI_407.elf
-Finished building: default.size.stdout
- 
-Finished building: SPI_407.bin
- 
-Finished building: SPI_407.list
+Finished building: SPI_OLED_407.list
  

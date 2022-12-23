@@ -1,0 +1,25 @@
+SPI1(APB2) clock: 84 MHz 
+
+Baud Rate: prescaler = 2 (42 Mbits/s)
+OLED FPS: 434FPS
+
+Baud Rate: prescaler = 4 (21 Mbits/s)
+OLED FPS: 434FPS
+
+Baud Rate: prescaler = 8 (10.5 Mbits/s)
+OLED FPS: 375FPS
+
+Baud Rate: prescaler = 16 (5.25 Mbits/s)
+OLED FPS: 289FPS
+
+Baud Rate: prescaler = 32 (2.625 Mbits/s)
+OLED FPS: 198FPS
+
+Baud Rate: prescaler = 64 (1.3125 Mbits/s)
+OLED FPS: 121FPS
+
+Baud Rate: prescaler = 128 (656.25 Kbits/s)
+OLED FPS: 68FPS
+
+Baud Rate: prescaler = 256 (328.125 Kbits/s)
+OLED FPS: 36FPS
