@@ -61,8 +61,8 @@ all: main-build
 main-build: UART_DMA_407.elf secondary-outputs
 
 # Tool invocations
-UART_DMA_407.elf: $(OBJS) $(USER_OBJS) C:\Users\incads1917\STM32CubeIDE\workspace_1.7.0\UART_DMA_407\STM32F407VGTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "UART_DMA_407.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\incads1917\STM32CubeIDE\workspace_1.7.0\UART_DMA_407\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="UART_DMA_407.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+UART_DMA_407.elf: $(OBJS) $(USER_OBJS) D:\Manthan\My_git\C_code_examples\STM32CubeIDE\workspace_1.7.0\UART_DMA_407\STM32F407VGTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "UART_DMA_407.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"D:\Manthan\My_git\C_code_examples\STM32CubeIDE\workspace_1.7.0\UART_DMA_407\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="UART_DMA_407.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

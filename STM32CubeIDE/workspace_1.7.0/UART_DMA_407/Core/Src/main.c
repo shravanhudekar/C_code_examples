@@ -71,10 +71,10 @@ static void MX_GPIO_Init(void);
 static void MX_DMA_Init(void);
 static void MX_TIM6_Init(void);
 static void MX_USART2_UART_Init(void);
-static void telnet_init(void);
+
 void DMA_loopback(void);
 /* USER CODE BEGIN PFP */
-
+static void telnet_init(void);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -147,7 +147,6 @@ int main(void)
   MX_DMA_Init();
   MX_TIM6_Init();
   MX_USART2_UART_Init();
-  HAL_TIM_Base_Start(&htim6);
   /* USER CODE BEGIN 2 */
 #ifdef TEST_IT
   HAL_UART_Transmit(&huart2, tx_buff, sizeof(tx_buff), 50);
@@ -156,10 +155,12 @@ int main(void)
 
 #ifdef TELNET
 
+  //printf("A");
+ // HAL_UART_Transmit(&huart2,(uint8_t *)"A", 1, 50);
   printf("*********************************************\r\n"
 		 "*     Telnet connection started....         *\r\n"
 		 "*********************************************\r\n");
-  telnet_init();
+//  telnet_init();
  // DMA_loopback();
 #endif
 
@@ -332,8 +333,10 @@ void SystemClock_Config(void)
   /** Initializes the RCC Oscillators according to the specified parameters
   * in the RCC_OscInitTypeDef structure.
   */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI|RCC_OSCILLATORTYPE_HSE;
   RCC_OscInitStruct.HSEState = RCC_HSE_BYPASS;
+  RCC_OscInitStruct.HSIState = RCC_HSI_ON;
+  RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
   RCC_OscInitStruct.PLL.PLLM = 8;
@@ -357,6 +360,7 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
+  HAL_RCC_MCOConfig(RCC_MCO1, RCC_MCO1SOURCE_HSI, RCC_MCODIV_1);
 }
 
 /**
@@ -413,10 +417,10 @@ static void MX_USART2_UART_Init(void)
 
   /* USER CODE END USART2_Init 1 */
   huart2.Instance = USART2;
-  huart2.Init.BaudRate = 19200;
-  huart2.Init.WordLength = UART_WORDLENGTH_8B;
-  huart2.Init.StopBits = UART_STOPBITS_1;
-  huart2.Init.Parity = UART_PARITY_NONE;
+  huart2.Init.BaudRate = 9600;
+  huart2.Init.WordLength = UART_WORDLENGTH_9B;
+  huart2.Init.StopBits = UART_STOPBITS_2;
+  huart2.Init.Parity = UART_PARITY_EVEN;
   huart2.Init.Mode = UART_MODE_TX_RX;
   huart2.Init.HwFlowCtl = UART_HWCONTROL_NONE;
   huart2.Init.OverSampling = UART_OVERSAMPLING_16;
@@ -478,6 +482,14 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : PA8 */
+  GPIO_InitStruct.Pin = GPIO_PIN_8;
+  GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  GPIO_InitStruct.Alternate = GPIO_AF0_MCO;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
 }
 
