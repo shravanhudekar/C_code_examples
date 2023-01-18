@@ -1,0 +1,49 @@
+12:05:32 **** Incremental Build of configuration Debug for project SPI_ardiuno_407 ****
+make -j12 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c: In function 'main':
+../Core/Src/main.c:104:4: warning: implicit declaration of function 'sprintf' [-Wimplicit-function-declaration]
+  104 |    sprintf(Tx_buff,"tx data buff: %d\r\n",i);
+      |    ^~~~~~~
+../Core/Src/main.c:104:4: warning: incompatible implicit declaration of built-in function 'sprintf'
+../Core/Src/main.c:22:1: note: include '<stdio.h>' or provide a declaration of 'sprintf'
+   21 | #include "main.h"
+  +++ |+#include <stdio.h>
+   22 | 
+../Core/Src/main.c:104:12: warning: pointer targets in passing argument 1 of 'sprintf' differ in signedness [-Wpointer-sign]
+  104 |    sprintf(Tx_buff,"tx data buff: %d\r\n",i);
+      |            ^~~~~~~
+      |            |
+      |            uint8_t * {aka unsigned char *}
+../Core/Src/main.c:104:12: note: expected 'char *' but argument is of type 'uint8_t *' {aka 'unsigned char *'}
+../Core/Src/main.c:105:38: warning: implicit declaration of function 'strlen' [-Wimplicit-function-declaration]
+  105 |    HAL_SPI_Transmit(&hspi1, Tx_buff, strlen(Tx_buff), 1000);
+      |                                      ^~~~~~
+../Core/Src/main.c:105:38: warning: incompatible implicit declaration of built-in function 'strlen'
+../Core/Src/main.c:22:1: note: include '<string.h>' or provide a declaration of 'strlen'
+   21 | #include "main.h"
+  +++ |+#include <string.h>
+   22 | 
+../Core/Src/main.c:105:45: warning: pointer targets in passing argument 1 of 'strlen' differ in signedness [-Wpointer-sign]
+  105 |    HAL_SPI_Transmit(&hspi1, Tx_buff, strlen(Tx_buff), 1000);
+      |                                             ^~~~~~~
+      |                                             |
+      |                                             uint8_t * {aka unsigned char *}
+../Core/Src/main.c:105:45: note: expected 'const char *' but argument is of type 'uint8_t *' {aka 'unsigned char *'}
+arm-none-eabi-gcc -o "SPI_ardiuno_407.elf" @"objects.list"   -mcpu=cortex-m4 -T"D:\My Git\C_code_examples\STM32CubeIDE\workspace_1.7.0\SPI_ardiuno_407\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="SPI_ardiuno_407.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: SPI_ardiuno_407.elf
+ 
+arm-none-eabi-size   SPI_ardiuno_407.elf 
+arm-none-eabi-objdump -h -S  SPI_ardiuno_407.elf  > "SPI_ardiuno_407.list"
+arm-none-eabi-objcopy  -O binary  SPI_ardiuno_407.elf  "SPI_ardiuno_407.bin"
+   text	   data	    bss	    dec	    hex	filename
+  12692	    120	   1904	  14716	   397c	SPI_ardiuno_407.elf
+Finished building: default.size.stdout
+ 
+Finished building: SPI_ardiuno_407.bin
+ 
+Finished building: SPI_ardiuno_407.list
+ 
+
+12:05:33 Build Finished. 0 errors, 6 warnings. (took 1s.80ms)
+

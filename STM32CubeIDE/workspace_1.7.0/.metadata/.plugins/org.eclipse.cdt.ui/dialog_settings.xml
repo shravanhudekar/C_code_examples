@@ -12,6 +12,8 @@
 		<item key="caseSensitive" value="false"/>
 		<item key="searchFlags" value="227191"/>
 		<list key="previousPatterns">
+			<item value="HAL_SPI_Receive"/>
+			<item value="HAL_SPI_TransmitReceive"/>
 			<item value="COUNTER"/>
 			<item value="HAL_UART_IRQHandler"/>
 			<item value="__io_getchar"/>
