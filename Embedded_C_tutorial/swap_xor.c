@@ -1,7 +1,11 @@
 #include <stdio.h>
 #include <stdint.h>
 
-#define SWAP(x,y) (x^=y^=x^=y)
+#define EIGHT_BIT 0x80
+#define SIXTEEN_BIT 0x8000
+#define THIRTYTWO_BIT 0x80000000
+
+#define SWAP(x,y) (x^=y^=x^=y)  
 
 /* consider example x= 4 y=9
 *
@@ -21,7 +25,7 @@
 */
 
 #define SWAP_BYTE(x) (((x & 0xFF) << 8) | ((x & 0xFF00) >> 8))
-/* above same methodology used here insted of 4 bit nibbles 8 bit i.e. 1 byte is swaped 
+/* above same methodology used here instead of 4 bit nibbles 8 bit i.e. 1 byte is swaped 
 *  considering x is of 2bytes(16bits) 
 */
 
@@ -30,34 +34,10 @@
                          ((x & 0x00FF0000) >> 8)  | \
                          ((x & 0xFF000000) >> 24))
 
-void printBinary8(uint8_t number)
+void printBinary(uint32_t number,uint32_t bit_mask)
 {
    // printf("0b ");
-    for(uint8_t bit_mask = 0x80; bit_mask; bit_mask >>= 1)      // loop until 'bit_mask' is '0'
-    {
-        printf("%d", (bit_mask & number)?1:0);
-         if(bit_mask == 16)
-        { printf(" ");}
-    }
-    printf("\n");
-}
-
-void printBinary16(uint16_t number)
-{
-   // printf("0b ");
-    for(uint16_t bit_mask = 0x8000; bit_mask; bit_mask >>= 1)      // loop until 'bit_mask' is '0'
-    {
-        printf("%d", (bit_mask & number)?1:0);
-        if(bit_mask & 0x1111)
-        { printf(" ");}
-    }
-    printf("\n");
-}
-
-void printBinary32(uint32_t number)
-{
-   // printf("0b ");
-    for(uint32_t bit_mask = 0x80000000; bit_mask; bit_mask >>= 1)      // loop until 'bit_mask' is '0'
+    for(;bit_mask; bit_mask >>= 1)      // loop until 'bit_mask' is '0'
     {
         printf("%d", (bit_mask & number)?1:0);
         if(bit_mask & 0x11111111)
@@ -67,31 +47,31 @@ void printBinary32(uint32_t number)
 }
 int main()
 {
-    // uint8_t a,b;                    // compiler overwrites 'a' after scanning 'b'
-    //                                 // as it always update register value in terms on 32bits
-    // uint16_t c= 1032;
-
-    int a,b,c=9728;
+    uint8_t a=1,b=1;   
+                                    // compiler overwrites 'a' after scanning 'b'
+                                    // as it always update register value in terms on 32bits
+    uint16_t c= 9728;
+   // int a,b,c=9728;
 
     printf("Enter two no. (a,b): ");
-    scanf("%u%u",&a,&b);
+    scanf("%hhu%hhu",&a,&b);
     
     SWAP(a,b);
     printf("swaped: a:%d b:%d\n",a,b);
 
-    printBinary8(a);
+    printBinary(a,EIGHT_BIT);
     a=SWAP_NIBBLES(a);
     printf("swaped nibles x: %d\t",a);
-    printBinary8(a);
+    printBinary(a,EIGHT_BIT);
 
-    printBinary16(c|b);
+    printBinary((c|b),SIXTEEN_BIT);
     c = SWAP_BYTE((c|b));
     printf("Swped Bytes: %d\t",c);
-    printBinary16(c);
+    printBinary(c,SIXTEEN_BIT);
 
-    printBinary32(123876);
+    printBinary(123876,THIRTYTWO_BIT);
     int d=SWAP_ENDIANS(123876);
-    printBinary32(d);
+    printBinary(d,THIRTYTWO_BIT);
 
     return 0;
 } 
