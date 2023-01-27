@@ -4112,3 +4112,21 @@ Command-line arguments:  -os win32 -ws win32 -arch x86_64
 
 !ENTRY org.eclipse.cdt.core 1 0 2023-01-24 09:32:08.656
 !MESSAGE Indexed 'FCM_SI_Bushing_CM7' (186 sources, 269 headers) in 16.8 sec: 32,007 declarations; 253,697 references; 0 unresolved inclusions; 1 syntax errors; 2 unresolved names (0.0007%)
+!SESSION 2023-01-27 15:58:11.108 -----------------------------------------------
+eclipse.buildId=Version 1.7.0
+java.version=11.0.10
+java.vendor=AdoptOpenJDK
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_US
+Command-line arguments:  -os win32 -ws win32 -arch x86_64
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 4 4 2023-01-27 15:58:30.065
+!MESSAGE CubeMX plugin appears to be active, Log4j initialization might be too late.
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 1 1 2023-01-27 15:58:30.155
+!MESSAGE Log4j initialized with config file D:\My Git\C_code_examples\STM32CubeIDE\workspace_1.7.0\.metadata\.log4j.xml
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2023-01-27 15:58:41.283
+!MESSAGE Started RMI Server, listening on port 41337
+
+!ENTRY org.eclipse.cdt.core 1 0 2023-01-27 16:03:30.185
+!MESSAGE Indexed 'Task_Scheduler' (21 sources, 81 headers) in 2.5 sec: 4,391 declarations; 17,578 references; 0 unresolved inclusions; 1 syntax errors; 2 unresolved names (0.0091%)
