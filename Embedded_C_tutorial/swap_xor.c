@@ -34,6 +34,8 @@
                          ((x & 0x00FF0000) >> 8)  | \
                          ((x & 0xFF000000) >> 24))
 
+#define TWOS_COMPLIMENT(x)  (~(x)+1)
+
 void printBinary(uint32_t number,uint32_t bit_mask)
 {
    // printf("0b ");
@@ -47,12 +49,11 @@ void printBinary(uint32_t number,uint32_t bit_mask)
 }
 int main()
 {
-    uint8_t a=1,b=1;   
-                                    // compiler overwrites 'a' after scanning 'b'
-                                    // as it always update register value in terms on 32bits
+    uint8_t a,b;      // compiler overwrites 'a' after scanning 'b'
+                        // as it always update register value in terms on 32bits                              
     uint16_t c= 9728;
-   // int a,b,c=9728;
-
+ 
+#ifdef SWAPING
     printf("Enter two no. (a,b): ");
     scanf("%hhu%hhu",&a,&b);
     
@@ -72,6 +73,29 @@ int main()
     printBinary(123876,THIRTYTWO_BIT);
     int d=SWAP_ENDIANS(123876);
     printBinary(d,THIRTYTWO_BIT);
+
+#else 
+    int num,comp;
+
+    printf("Enter unsigned negative no.");
+    scanf("%u",&num);
+
+    printf("\nenter no. is: %d\t ~x: %d\n",num,~num);
+    printBinary(num,EIGHT_BIT);
+    printBinary(~num,EIGHT_BIT);
+
+    comp=TWOS_COMPLIMENT(~num);
+    num=TWOS_COMPLIMENT(num);
+    
+
+    printf("\n2's comp. is: %d\n",num);
+    printBinary(num,EIGHT_BIT);
+
+    printf("\n2's comp. of ~x.: %d\n",comp);
+    printBinary(comp,EIGHT_BIT);
+
+
+#endif
 
     return 0;
 } 
