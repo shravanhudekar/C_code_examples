@@ -1,11 +1,8 @@
 #include <stdio.h>
 #include <stdint.h>
+#include "print_binary.h"
 
-#define EIGHT_BIT 0x80
-#define SIXTEEN_BIT 0x8000
-#define THIRTYTWO_BIT 0x80000000
-
-#define SWAP(x,y) (x^=y^=x^=y)  
+#define SWAP(x,y) (x^=y^=x^=y)            
 
 /* consider example x= 4 y=9
 *
@@ -34,26 +31,19 @@
                          ((x & 0x00FF0000) >> 8)  | \
                          ((x & 0xFF000000) >> 24))
 
-void printBinary(uint32_t number,uint32_t bit_mask)
-{
-   // printf("0b ");
-    for(;bit_mask; bit_mask >>= 1)      // loop until 'bit_mask' is '0'
-    {
-        printf("%d", (bit_mask & number)?1:0);
-        if(bit_mask & 0x11111111)
-        { printf(" ");}
-    }
-    printf("\n");
-}
+
 int main()
 {
-    uint8_t a=1,b=1;   
-                                    // compiler overwrites 'a' after scanning 'b'
-                                    // as it always update register value in terms on 32bits
+    uint8_t a,b;                                   
     uint16_t c= 9728;
-   // int a,b,c=9728;
 
-    printf("Enter two no. (a,b): ");
+ /*******************************************************************************************
+  * Because %u stands for "unsigned", it well may be uint64_t and is architecture dependent. 
+  * According to man 3 printf, you may want to use length modifier to get sought behaviour, 
+  * i.e. %hu (uint16_t) and %hhu (uint8_t).
+  * *****************************************************************************************/
+
+    printf("Enter two no. (a,b): ");                  
     scanf("%hhu%hhu",&a,&b);
     
     SWAP(a,b);
