@@ -1,0 +1,2 @@
+scheduler.c:12:6:LED_Scheduler_init	4	static
+scheduler.c:21:6:toggle_LED	8	static

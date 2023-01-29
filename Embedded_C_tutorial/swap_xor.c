@@ -31,29 +31,8 @@
                          ((x & 0x00FF0000) >> 8)  | \
                          ((x & 0xFF000000) >> 24))
 
-<<<<<<< HEAD
 #define TWOS_COMPLIMENT(x)  (~(x)+1)
 
-void printBinary(uint32_t number,uint32_t bit_mask)
-{
-   // printf("0b ");
-    for(;bit_mask; bit_mask >>= 1)      // loop until 'bit_mask' is '0'
-    {
-        printf("%d", (bit_mask & number)?1:0);
-        if(bit_mask & 0x11111111)
-        { printf(" ");}
-    }
-    printf("\n");
-}
-int main()
-{
-    uint8_t a,b;      // compiler overwrites 'a' after scanning 'b'
-                        // as it always update register value in terms on 32bits                              
-    uint16_t c= 9728;
- 
-#ifdef SWAPING
-    printf("Enter two no. (a,b): ");
-=======
 
 int main()
 {
@@ -65,9 +44,9 @@ int main()
   * According to man 3 printf, you may want to use length modifier to get sought behaviour, 
   * i.e. %hu (uint16_t) and %hhu (uint8_t).
   * *****************************************************************************************/
-
+#ifdef SWAPING
     printf("Enter two no. (a,b): ");                  
->>>>>>> 3f189f69f52b6a4b603a1fa021833a5719b2f3d1
+
     scanf("%hhu%hhu",&a,&b);
     
     SWAP(a,b);
