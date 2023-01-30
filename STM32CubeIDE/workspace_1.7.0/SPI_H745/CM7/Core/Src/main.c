@@ -75,8 +75,9 @@ static void MX_USART3_UART_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-char Tx_Data[20]={0}, Rx_Data[20]={0};
-uint8_t flag=FALSE;
+char Tx_Data[20]={0}, Rx_Data[20]={0},Rx_msg=0;
+uint8_t flag=FALSE,i=0;
+uint8_t pin_status=0;
 /* USER CODE END 0 */
 
 /**
@@ -139,24 +140,40 @@ int main(void)
   MX_SPI2_Init();
   MX_USART3_UART_Init();
   /* USER CODE BEGIN 2 */
-
+  sprintf((char *)Tx_Data, "ready to send\r\n");
+  HAL_SPI_Transmit(&hspi2,(uint8_t *)Tx_Data,strlen(Tx_Data), 50);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+//	  pin_status= HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13);
+//
+//	  if (pin_status)
+//	  {
+//		  sprintf((char *)Tx_Data, "data transmit\r\n");
+//    	  HAL_SPI_Transmit(&hspi2,(uint8_t *)Tx_Data,strlen(Tx_Data), 50);
+//
+//    	  flag=TRUE;
+//	  }
+//
+//	  if(flag)
+//	  {
+		//  HAL_SPI_Receive_IT(&hspi2, (uint8_t *)Rx_Data, sizeof(Rx_Data));
+		  HAL_SPI_Receive(&hspi2,(uint8_t *)&Rx_msg, 1,50);
+		  printf("%c",Rx_msg);
+		  Rx_Data[i++]=Rx_msg;
 
-	  sprintf((char *)Tx_Data, "data transmit\r\n");
+		  if(i>25)
+		  {
+			  i=0;
+			  printf("\r\n");
+		  }
+		  flag=FALSE;
+//	  }
 
-//      if ( (!__HAL_SPI_GET_FLAG(&hspi2, SPI_FLAG_TXP)))
-
-    	  HAL_SPI_Transmit(&hspi2,(uint8_t *)Tx_Data,strlen(Tx_Data), 50);
-
-    	  flag=TRUE;
-
-
-	  HAL_Delay(2000);
+	  //HAL_Delay(500);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -236,7 +253,6 @@ static void MX_SPI2_Init(void)
 
   /* USER CODE END SPI2_Init 1 */
   /* SPI2 parameter configuration*/
-
   hspi2.Instance = SPI2;
   hspi2.Init.Mode = SPI_MODE_MASTER;
   hspi2.Init.Direction = SPI_DIRECTION_2LINES;
@@ -335,9 +351,6 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOJ_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, GPIO_PIN_RESET);
-
-  /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOI, GPIO_PIN_13, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
@@ -345,9 +358,8 @@ static void MX_GPIO_Init(void)
 
   /*Configure GPIO pin : PC13 */
   GPIO_InitStruct.Pin = GPIO_PIN_13;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
   /*Configure GPIO pin : PI13 */
@@ -367,6 +379,11 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+void HAL_SPI_RxCpltCallback(SPI_HandleTypeDef *hspi)
+{
+	printf("%s\r\n",Rx_Data);
+	flag=TRUE;
+}
 PUTCHAR_PROTOTYPE
 {
 

@@ -10,14 +10,17 @@
 
 #include "LED_control.h"
 
+#define MAX_TASK 16
+
 typedef struct scheduler
 {
 	uint8_t period;
 	uint8_t elapse_time;
+	void (*func)(void);
 
 }task_t;
 
 void LED_Scheduler_init(void);
-void toggle_LED(void);
+void SchedularHandler (uint16_t CallInterval);
 
 #endif /* INC_SCHEDULER_H_ */
