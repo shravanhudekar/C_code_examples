@@ -12,7 +12,7 @@ int main()
     // printf("%s\n",str);
 
     char sne[50];
-  // scanf("\n");
+   scanf("\n");
   //printf("hello\n");
     scanf("%[^\n]%*c",sne);
     printf("%s\n",sne);
