@@ -1,3 +1,7 @@
 hspi2
 flag
 Tx_Data
+pin_status
+Rx_Data
+Rx_msg
+i

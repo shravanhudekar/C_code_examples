@@ -1,0 +1,10 @@
+12:12:42 **** Incremental Build of configuration Debug for project SPI_ISR_DMA_407 ****
+make -j12 all 
+arm-none-eabi-size   SPI_ISR_DMA_407.elf 
+   text	   data	    bss	    dec	    hex	filename
+  21032	    120	   2064	  23216	   5ab0	SPI_ISR_DMA_407.elf
+Finished building: default.size.stdout
+ 
+
+12:12:43 Build Finished. 0 errors, 0 warnings. (took 304ms)
+
