@@ -9,10 +9,12 @@
 #include <string.h>
 #include "print_binary.h"
 
+//#define a (uint8_t) 10
 
 void octal(int n)
 {
     int oct=0,i=1;
+    //uint16_t a = (uint16_t)6555355;
     printf(" INT\t %d\t",n);
     while (n != 0)
     {
@@ -67,7 +69,7 @@ int main()
     // octal(10);
 
      printf(" TYPE\t  DECIMAL\t HEXADECIMAL\n");
-     hexadecimal(0xABCDEF);
+     octal(12345);
 
     return 0;
 }

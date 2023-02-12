@@ -16,7 +16,10 @@ int main()
     // }while(name[i++]!= '\n');
     scanf("\n");
     scanf("%[^\n]%*c",&name);
-
+    str1 += 3;
+   // printf("%c",*str1);
+    strcpy(str1,str);
+    printf("%s",name);
     //  while(name[i] != '\0')
     //  {
     //     fname[i]=*(ptr+(i+3));
@@ -26,25 +29,25 @@ int main()
     // strcat(name,fname);
     len=strlen(name)+strlen(str);
 
-    while(i != len)
-    {
-        if((*str != '\0') && (i>2))
-        {
-             *str2=*str;
-             str++;
-        }
+    // while(i != len)
+    // {
+    //     if((*str != '\0') && (i>2))
+    //     {
+    //          *str2=*str;
+    //          str++;
+    //     }
 
-        else
-        {
-            *str2=*str1;
-            str1++;
-        }
-        str2++;
-        i++;
-    }
+    //     else
+    //     {
+    //         *str2=*str1;
+    //         str1++;
+    //     }
+    //     str2++;
+    //     i++;
+    // }
     
        
-    printf("%s",fname);
+    // printf("%s",fname);
 
     return 0;
 }

@@ -28,14 +28,14 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-#ifdef __GNUC__
-
- #define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
-
-#else
-  #define PUTCHAR_PROTOTYPE int fputc(int ch, FILE *f)
-
-#endif /* __GNUC__ */
+//#ifdef __GNUC__
+//
+// #define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
+//
+//#else
+//  #define PUTCHAR_PROTOTYPE int fputc(int ch, FILE *f)
+//
+//#endif /* __GNUC__ */
 
 #define FALSE 0
 #define TRUE 1
@@ -56,7 +56,12 @@
 
 /* Private variables ---------------------------------------------------------*/
 
+QSPI_HandleTypeDef hqspi;
+MDMA_HandleTypeDef hmdma_quadspi_fifo_th;
+
 SPI_HandleTypeDef hspi2;
+DMA_HandleTypeDef hdma_spi2_rx;
+DMA_HandleTypeDef hdma_spi2_tx;
 
 UART_HandleTypeDef huart3;
 
@@ -67,8 +72,11 @@ UART_HandleTypeDef huart3;
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
-static void MX_SPI2_Init(void);
+static void MX_DMA_Init(void);
 static void MX_USART3_UART_Init(void);
+static void MX_MDMA_Init(void);
+static void MX_QUADSPI_Init(void);
+static void MX_SPI2_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -137,47 +145,41 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  MX_SPI2_Init();
+  MX_DMA_Init();
   MX_USART3_UART_Init();
+  MX_MDMA_Init();
+  MX_QUADSPI_Init();
+  MX_SPI2_Init();
   /* USER CODE BEGIN 2 */
   sprintf((char *)Tx_Data, "ready to send\r\n");
-  HAL_SPI_Transmit(&hspi2,(uint8_t *)Tx_Data,strlen(Tx_Data), 50);
+  HAL_SPI_Transmit_DMA(&hspi2,(uint8_t *)Tx_Data,15);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-//	  pin_status= HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13);
-//
-//	  if (pin_status)
-//	  {
-//		  sprintf((char *)Tx_Data, "data transmit\r\n");
-//    	  HAL_SPI_Transmit(&hspi2,(uint8_t *)Tx_Data,strlen(Tx_Data), 50);
-//
-//    	  flag=TRUE;
-//	  }
-//
-//	  if(flag)
-//	  {
-		//  HAL_SPI_Receive_IT(&hspi2, (uint8_t *)Rx_Data, sizeof(Rx_Data));
-		  HAL_SPI_Receive(&hspi2,(uint8_t *)&Rx_msg, 1,50);
-		  printf("%c",Rx_msg);
-		  Rx_Data[i++]=Rx_msg;
+	  pin_status= HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13);
 
-		  if(i>25)
-		  {
-			  i=0;
-			  printf("\r\n");
-		  }
+	  if (pin_status)
+	  {
+		  HAL_SPI_Receive_DMA(&hspi2, (uint8_t *)Rx_Data, 15);
+//		  sprintf((char *)Tx_Data, "data send toA\r\n");
+//		  HAL_SPI_Transmit_DMA(&hspi2, (uint8_t *)Tx_Data, 15);
+          flag=TRUE;
+		 // HAL_SPI_Transmit(&hspi2,"A",1, 50);
+	  }
+	  if(flag)
+	  {
+		  HAL_SPI_Receive_DMA(&hspi2, (uint8_t *)Rx_Data, 15);
+		  HAL_UART_Transmit(&huart3, Rx_Data, sizeof(Rx_Data), 50);
 		  flag=FALSE;
-//	  }
+	  }
 
-	  //HAL_Delay(500);
+	  HAL_Delay(500);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-
   }
   /* USER CODE END 3 */
 }
@@ -203,7 +205,7 @@ void SystemClock_Config(void)
   * in the RCC_OscInitTypeDef structure.
   */
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
-  RCC_OscInitStruct.HSEState = RCC_HSE_BYPASS;
+  RCC_OscInitStruct.HSEState = RCC_HSE_ON;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
   RCC_OscInitStruct.PLL.PLLM = 5;
@@ -223,7 +225,7 @@ void SystemClock_Config(void)
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2
                               |RCC_CLOCKTYPE_D3PCLK1|RCC_CLOCKTYPE_D1PCLK1;
-  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
+  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSE;
   RCC_ClkInitStruct.SYSCLKDivider = RCC_SYSCLK_DIV1;
   RCC_ClkInitStruct.AHBCLKDivider = RCC_HCLK_DIV2;
   RCC_ClkInitStruct.APB3CLKDivider = RCC_APB3_DIV2;
@@ -231,10 +233,45 @@ void SystemClock_Config(void)
   RCC_ClkInitStruct.APB2CLKDivider = RCC_APB2_DIV2;
   RCC_ClkInitStruct.APB4CLKDivider = RCC_APB4_DIV2;
 
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_2) != HAL_OK)
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK)
   {
     Error_Handler();
   }
+}
+
+/**
+  * @brief QUADSPI Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_QUADSPI_Init(void)
+{
+
+  /* USER CODE BEGIN QUADSPI_Init 0 */
+
+  /* USER CODE END QUADSPI_Init 0 */
+
+  /* USER CODE BEGIN QUADSPI_Init 1 */
+
+  /* USER CODE END QUADSPI_Init 1 */
+  /* QUADSPI parameter configuration*/
+  hqspi.Instance = QUADSPI;
+  hqspi.Init.ClockPrescaler = 200;
+  hqspi.Init.FifoThreshold = 1;
+  hqspi.Init.SampleShifting = QSPI_SAMPLE_SHIFTING_NONE;
+  hqspi.Init.FlashSize = 1;
+  hqspi.Init.ChipSelectHighTime = QSPI_CS_HIGH_TIME_1_CYCLE;
+  hqspi.Init.ClockMode = QSPI_CLOCK_MODE_0;
+  hqspi.Init.FlashID = QSPI_FLASH_ID_1;
+  hqspi.Init.DualFlash = QSPI_DUALFLASH_DISABLE;
+  if (HAL_QSPI_Init(&hqspi) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN QUADSPI_Init 2 */
+
+  /* USER CODE END QUADSPI_Init 2 */
+
 }
 
 /**
@@ -334,6 +371,42 @@ static void MX_USART3_UART_Init(void)
 }
 
 /**
+  * Enable DMA controller clock
+  */
+static void MX_DMA_Init(void)
+{
+
+  /* DMA controller clock enable */
+  __HAL_RCC_DMA1_CLK_ENABLE();
+
+  /* DMA interrupt init */
+  /* DMA1_Stream0_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Stream0_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Stream0_IRQn);
+  /* DMA1_Stream1_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Stream1_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Stream1_IRQn);
+
+}
+
+/**
+  * Enable MDMA controller clock
+  */
+static void MX_MDMA_Init(void)
+{
+
+  /* MDMA controller clock enable */
+  __HAL_RCC_MDMA_CLK_ENABLE();
+  /* Local variables */
+
+  /* MDMA interrupt initialization */
+  /* MDMA_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(MDMA_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(MDMA_IRQn);
+
+}
+
+/**
   * @brief GPIO Initialization Function
   * @param None
   * @retval None
@@ -343,11 +416,12 @@ static void MX_GPIO_Init(void)
   GPIO_InitTypeDef GPIO_InitStruct = {0};
 
   /* GPIO Ports Clock Enable */
+  __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
   __HAL_RCC_GPIOD_CLK_ENABLE();
   __HAL_RCC_GPIOI_CLK_ENABLE();
-  __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOH_CLK_ENABLE();
+  __HAL_RCC_GPIOF_CLK_ENABLE();
   __HAL_RCC_GPIOJ_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
@@ -379,18 +453,19 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-void HAL_SPI_RxCpltCallback(SPI_HandleTypeDef *hspi)
-{
-	printf("%s\r\n",Rx_Data);
-	flag=TRUE;
-}
-PUTCHAR_PROTOTYPE
+//void HAL_SPI_RxCpltCallback(SPI_HandleTypeDef *hspi)
+//{
+////	printf("%s\r\n",Rx_Data);
+//	HAL_UART_Transmit(&huart3, Rx_Data, sizeof(Rx_Data), 50);
+//	flag=TRUE;
+//}
+/*PUTCHAR_PROTOTYPE
 {
 
   HAL_UART_Transmit(&huart3, (uint8_t *)&ch, 1, HAL_MAX_DELAY);
 
   return ch;
-}
+}/*
 /* USER CODE END 4 */
 
 /**
