@@ -1,5 +1,8 @@
 /*****************************************************************************************
  *  C prog- Define a macro to create  n th bit flag - BIT(n), SET_BIT(n), CLEAR_BIT(n)   *
+ * 
+ * How will you write a Function which takes Two Arguments --> a Byte and field in the Byte and returns value 
+of field in that Byte? 
  *****************************************************************************************/
 
 #include<stdio.h>
