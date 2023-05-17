@@ -25,14 +25,14 @@ void main()
     combine_t d;
     d.frame = 0x10203040;
     
-    printf("%d\n",d.frame);
+    printf("%x\n",d.frame);
  
 /* access data individually from frame */
 
-    printf("%d\n",d.combine_data_t.data_0);
-    printf("%d\n",d.combine_data_t.data_1);
-    printf("%d\n",d.combine_data_t.data_2);
-    printf("%d\n",d.combine_data_t.data_3);
+    printf("%x\n",d.combine_data_t.data_0);
+    printf("%x\n",d.combine_data_t.data_1);
+    printf("%x\n",d.combine_data_t.data_2);
+    printf("%x\n",d.combine_data_t.data_3);
     
 /* setting indiviual byte in frame */
 

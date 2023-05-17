@@ -40,8 +40,8 @@ int main()
     uint16_t c= 9728;
 
  /*******************************************************************************************
-  * Because %u stands for "unsigned", it well may be uint64_t and is architecture dependent. 
-  * According to man 3 printf, you may want to use length modifier to get sought behaviour, 
+  * Because %u stands for "unsigned", it may be uint64_t and is architecture dependent. 
+  * According to many 3 printf, you may want to use length modifier to get sought behaviour, 
   * i.e. %hu (uint16_t) and %hhu (uint8_t).
   * *****************************************************************************************/
 #ifdef SWAPING

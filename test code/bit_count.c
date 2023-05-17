@@ -1,26 +1,6 @@
 #include<stdio.h>
 #include<stdint.h>
-//#include "print_binary.h"
-
-#define EIGHT_BIT 0x80
-#define SIXTEEN_BIT 0x8000
-#define THIRTYTWO_BIT 0x80000000
-
-
-void printBinary(uint32_t number,uint32_t bit_mask)
-{
-   // printf("0b ");
-    for(;bit_mask; bit_mask >>= 1)      // loop until 'bit_mask' is '0'
-    {
-        printf("%d", (bit_mask & number)?1:0);
-        
-        if(bit_mask & 0x11111111)
-        { printf(" ");}
-
-    }
-    printf("\n");
-}
-
+#include "print_binary.h"
 
 int main()
 {
@@ -30,7 +10,8 @@ int main()
     scanf("%d",&data);
     printBinary(data,THIRTYTWO_BIT);
 
-    for(int i=0;i<(sizeof(data)*8);i++)                        // 4 bytes * 8 = 32bits
+   // for(int i=0;i<(sizeof(data)*8);i++)                        // 4 bytes * 8 = 32bits
+    while(data != 0)
     {
       
         /**** Method 1 ****/                         // MSB is set to zero by right shift
