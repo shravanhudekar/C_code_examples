@@ -1,6 +1,0 @@
-{
-    "files.associations": {
-        "print_binary.h": "c",
-        "stdint.h": "c"
-    }
-}
