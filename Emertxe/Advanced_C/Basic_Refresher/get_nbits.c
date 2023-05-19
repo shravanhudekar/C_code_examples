@@ -28,5 +28,5 @@ int main()
 
 int get_nbits(int num, int n)           //function declaration
 {
-    return num & ((1<<n) -1);           // if n=3 tehn, mask = n-1 will give 2 i.e. 0000 0011 
+    return num & ((1<<n) -1);           // if n=3 then, mask = n-1 will give 2 i.e. 0000 0011 
 }

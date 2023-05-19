@@ -210,3 +210,6 @@ int main()
 }
 
 #endif
+
+//q: 24
+
