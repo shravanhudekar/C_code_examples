@@ -48,7 +48,7 @@ int main ()
 
         else
         {
-            printf("No, entered number is not a perfect number");
+            printf("No, entered number is not a perfect number\n");
         }
     }
 }
