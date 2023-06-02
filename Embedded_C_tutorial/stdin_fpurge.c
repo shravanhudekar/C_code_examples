@@ -9,11 +9,11 @@ int main()
 
     while(ch != 'n')
     {
-        scanf("%c",&ch);
+        scanf("%c",&ch);              // scan only 1 char
         printf("\n");
-        //_fpurge(stdin);    //erase content of stdin buffer
-      //  while(getchar()!='\n');
-        printf("%c",ch);
+        __fpurge(stdin);    //erase content of stdin buffer
+        //while(getchar()!='\n');     // takes string until \n is encounter
+        printf("%c\n",ch);              // prints 1st char scanned
     } 
     return 0;
 }
