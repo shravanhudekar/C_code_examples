@@ -62,7 +62,7 @@ main-build: Task_Scheduler.elf secondary-outputs
 
 # Tool invocations
 Task_Scheduler.elf: $(OBJS) $(USER_OBJS) D:\My\ Git\C_code_examples\STM32CubeIDE\workspace_1.7.0\Task_Scheduler\STM32F407VGTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "Task_Scheduler.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"D:\My Git\C_code_examples\STM32CubeIDE\workspace_1.7.0\Task_Scheduler\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Task_Scheduler.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+	arm-none-eabi-gcc -o "Task_Scheduler.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"D:\My Git\C_code_examples\STM32CubeIDE\workspace_1.7.0\Task_Scheduler\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Task_Scheduler.map" -Wl,--gc-sections -static -L"D:\My Git\C_code_examples\STM32CubeIDE\workspace_1.7.0\Task_Scheduler\Drivers\CMSIS\Lib" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

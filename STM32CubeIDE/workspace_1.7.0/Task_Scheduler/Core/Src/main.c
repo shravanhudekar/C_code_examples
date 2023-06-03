@@ -19,7 +19,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-
+#include "arm_math.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "scheduler.h"
@@ -33,6 +33,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+#define FFT_Length  1024
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -44,7 +45,8 @@
 TIM_HandleTypeDef htim6;
 
 /* USER CODE BEGIN PV */
-
+float32_t FFT_Input_Q15_f[50];
+float32_t aFFT_Input_Q15[50];
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -68,7 +70,7 @@ uint16_t tim_count=0;
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-
+	arm_float_to_q15((float32_t *)&FFT_Input_Q15_f[0], (q15_t *)&aFFT_Input_Q15[0], FFT_Length*2);
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
