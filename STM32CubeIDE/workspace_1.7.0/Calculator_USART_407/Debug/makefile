@@ -61,8 +61,8 @@ all: main-build
 main-build: Calculator_USART_407.elf secondary-outputs
 
 # Tool invocations
-Calculator_USART_407.elf: $(OBJS) $(USER_OBJS) C:\Users\incads1917\STM32CubeIDE\workspace_1.7.0\Calculator_USART_407\STM32F407VGTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "Calculator_USART_407.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\incads1917\STM32CubeIDE\workspace_1.7.0\Calculator_USART_407\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Calculator_USART_407.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -u _scanf_float -Wl,--start-group -lc -lm -Wl,--end-group
+Calculator_USART_407.elf: $(OBJS) $(USER_OBJS) D:\My\ Git\C_code_examples\STM32CubeIDE\workspace_1.7.0\Calculator_USART_407\STM32F407VGTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "Calculator_USART_407.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"D:\My Git\C_code_examples\STM32CubeIDE\workspace_1.7.0\Calculator_USART_407\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Calculator_USART_407.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -u _scanf_float -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
